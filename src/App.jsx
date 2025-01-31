@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { HiOutlineUserCircle, HiMenuAlt3, HiX } from "react-icons/hi";
 import { AiOutlinePlus } from "react-icons/ai";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import FormWizardSample from "./Components/Formwizard";
 
 export default function Dashboard() {
   const [isHovered, setIsHovered] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showFormWizard, setShowFormWizard] = useState(false);
   
   const tableData = [
     { id: 1, reportName: "Q1 Financial Report", date: "2024-01-15", status: "Completed" },
@@ -86,6 +88,7 @@ export default function Dashboard() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => setShowFormWizard(true)}
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
           >
             <AiOutlinePlus className="h-5 w-5" />
@@ -162,6 +165,40 @@ export default function Dashboard() {
             </table>
           </div>
         </motion.div>
+
+        {/* FormWizard Modal */}
+        <AnimatePresence>
+          {showFormWizard && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto"
+              onClick={() => setShowFormWizard(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white/95 backdrop-blur-md rounded-xl shadow-xl w-full max-w-2xl p-6 relative my-8"
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-gray-800">Create New Report</h2>
+                  <button
+                    onClick={() => setShowFormWizard(false)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors duration-200 rounded-full hover:bg-gray-100 p-1"
+                  >
+                    <HiX className="h-6 w-6" />
+                  </button>
+                </div>
+                <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
+                  <FormWizardSample />
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );
