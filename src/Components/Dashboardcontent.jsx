@@ -99,6 +99,7 @@ export default function Dashboard() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
+                      onClick={() => navigate('/edit-details')}
                     >
                       View
                     </motion.button>
