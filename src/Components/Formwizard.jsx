@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IoCheckmarkCircle } from "react-icons/io5";
 import Layout from './Layout';
 import { toast } from 'react-toastify';
+import api from '../services/api';  // Add this import
 
 const steps = [
   'Step 1: Business Details',
@@ -891,12 +892,38 @@ export default function FormWizardSample() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleSubmit = async () => {
+    if (validateStep(activeStep)) {
+      try {
+        // Show loading toast
+        const loadingToast = toast.loading("Submitting your report...");
+        
+        // Submit form data
+        await api.submitForm(formData);
+        
+        // Update loading toast to success
+        toast.update(loadingToast, {
+          render: "Report submitted successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000
+        });
+
+        // Navigate to dashboard
+        navigate('/');
+      } catch (error) {
+        toast.error(error.message || 'Failed to submit report');
+      }
+    } else {
+      toast.error('Please fill in all required fields correctly');
+    }
+  };
+
+  // Modify the handleNext function
   const handleNext = () => {
     if (validateStep(activeStep)) {
       if (activeStep === steps.length - 1) {
-        // Handle form submission
-        toast.success('Form submitted successfully!');
-        navigate('/');
+        handleSubmit(); // Call handleSubmit instead of direct navigation
       } else {
         setActiveStep(Math.min(steps.length - 1, activeStep + 1));
       }

@@ -1,21 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HiOutlineUserCircle, HiMenuAlt3, HiX } from "react-icons/hi";
 import { AiOutlinePlus } from "react-icons/ai";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Layout from './Layout';
+import api from '../services/api';
+import { toast } from 'react-toastify';
 
 export default function Dashboard() {
   const [isHovered, setIsHovered] = useState(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [reports, setReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  
-  const tableData = [
-    { id: 1, reportName: "Q1 Financial Report", date: "2024-01-15", status: "Completed" },
-    { id: 2, reportName: "Customer Analysis", date: "2024-01-18", status: "Pending" },
-    { id: 3, reportName: "Sales Overview", date: "2024-01-20", status: "In Progress" },
-    { id: 4, reportName: "Marketing Campaign", date: "2024-01-22", status: "Completed" },
-  ];
+
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  const fetchReports = async () => {
+    try {
+      setIsLoading(true);
+      console.log('Starting fetchReports');
+      const response = await api.getSubmissions();
+      console.log('API Response:', response);
+
+      if (!response?.success || !response?.data) {
+        throw new Error('Invalid response format');
+      }
+
+      const formattedReports = response.data.map(report => ({
+        id: report._id,
+        reportName: report.fullName || 'Untitled Report',
+        date: new Date(report.createdAt).toLocaleDateString(),
+        status: report.status || 'In Progress',
+        type: report.businessType || 'N/A',
+        loanType: report.loan || 'N/A'
+      }));
+
+      console.log('Formatted reports:', formattedReports);
+      setReports(formattedReports);
+    } catch (error) {
+      console.error('Dashboard Error:', error);
+      toast.error(error.message || 'Failed to fetch reports');
+      setReports([]); // Set empty array on error
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Layout>
@@ -46,69 +77,103 @@ export default function Dashboard() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100"
       >
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Report Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {tableData.map((row, index) => (
-                <motion.tr 
-                  key={row.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  onHoverStart={() => setIsHovered(row.id)}
-                  onHoverEnd={() => setIsHovered(null)}
-                  className={`transition-colors duration-200 ${
-                    isHovered === row.id ? 'bg-blue-50' : ''
-                  }`}
-                >
-                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
-                    {row.reportName}
-                  </td>
-                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
-                    {row.date}
-                  </td>
-                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                    <motion.span
-                      whileHover={{ scale: 1.05 }}
-                      className={`px-2 sm:px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${row.status === 'Completed' ? 'bg-green-100 text-green-800' : 
-                          row.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                          'bg-blue-100 text-blue-800'}`}
+        {isLoading ? (
+          <div className="p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading reports...</p>
+          </div>
+        ) : reports.length === 0 ? (
+          <div className="p-8 text-center">
+            <p className="text-gray-600">No reports found. Create your first report!</p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/create-report')}
+              className="mt-4 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-6 py-3 rounded-lg"
+            >
+              Create Report
+            </motion.button>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Business Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Business Type
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Loan Type
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Created Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                <AnimatePresence>
+                  {reports.map((report, index) => (
+                    <motion.tr 
+                      key={report.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ delay: index * 0.1 }}
+                      onHoverStart={() => setIsHovered(report.id)}
+                      onHoverEnd={() => setIsHovered(null)}
+                      className={`transition-colors duration-200 ${
+                        isHovered === report.id ? 'bg-blue-50' : ''
+                      }`}
                     >
-                      {row.status}
-                    </motion.span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
-                      onClick={() => navigate('/edit-details')}
-                    >
-                      View
-                    </motion.button>
-                  </td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {report.reportName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {report.type}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {report.loanType}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {report.date}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <motion.span
+                          whileHover={{ scale: 1.05 }}
+                          className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${report.status === 'Completed' ? 'bg-green-100 text-green-800' : 
+                            report.status === 'In Progress' ? 'bg-blue-100 text-blue-800' : 
+                            'bg-yellow-100 text-yellow-800'}`}
+                        >
+                          {report.status}
+                        </motion.span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="text-indigo-600 hover:text-indigo-800 font-medium"
+                          onClick={() => navigate(`/final-details/pdf-report/${report.id}`)}
+                        >
+                          View Details
+                        </motion.button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </div>
+        )}
       </motion.div>
     </Layout>
   );

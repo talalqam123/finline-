@@ -1,16 +1,18 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams, useLocation, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaUser, FaFileAlt, FaCog } from 'react-icons/fa';
 import Layout from './Layout';
-import CompanyDetails from './CompanyDetails';
-import OwnerInformation from './OwnerInformation';
+import CompanyDetails from './Permanent Details/CompanyDetails';
+import OwnerInformation from './Permanent Details/OwnerInformation';
+import MonthlyExpense from './Income Details/MonthlyExpense';
+import { toast } from 'react-toastify';
 
 const TabContainer = styled.div`
   width: 100%;
   padding: 30px;
   background: #f8f9fd;
-  border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 `;
 
@@ -25,8 +27,8 @@ const HorizontalTabs = styled.div`
 const TabButton = styled.button`
   padding: 16px 24px;
   border: none;
-  background: ${props => props.active ? 
-    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' : 
+  background: ${props => props.active ?
+    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' :
     'rgba(255, 255, 255, 0.8)'};
   cursor: pointer;
   font-size: 16px;
@@ -35,8 +37,8 @@ const TabButton = styled.button`
   transition: all 0.4s ease;
   border-radius: 12px;
   font-weight: ${props => props.active ? '600' : '500'};
-  box-shadow: ${props => props.active ? 
-    '0 10px 20px rgba(99, 102, 241, 0.2)' : 
+  box-shadow: ${props => props.active ?
+    '0 10px 20px rgba(99, 102, 241, 0.2)' :
     '0 4px 6px rgba(0, 0, 0, 0.05)'};
   display: flex;
   align-items: center;
@@ -75,8 +77,8 @@ const SubTabButton = styled.button`
   padding: 14px 20px;
   text-align: left;
   border: none;
-  background: ${props => props.active ? 
-    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' : 
+  background: ${props => props.active ?
+    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' :
     'transparent'};
   cursor: pointer;
   color: ${props => props.active ? '#ffffff' : '#64748b'};
@@ -88,9 +90,9 @@ const SubTabButton = styled.button`
   overflow: hidden;
 
   &:hover {
-    background: ${props => props.active ? 
-      'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' : 
-      'rgba(99, 102, 241, 0.1)'};
+    background: ${props => props.active ?
+    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' :
+    'rgba(99, 102, 241, 0.1)'};
     color: ${props => props.active ? '#ffffff' : '#6366f1'};
   }
 
@@ -119,48 +121,108 @@ const TabContent = styled(motion.div)`
 `;
 
 const UserDetails = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams(); // Add this line
   const [activeTab, setActiveTab] = useState(0);
   const [activeSubTab, setActiveSubTab] = useState(0);
+  const [reportId, setReportId] = useState(id); // Add this line
 
+  // Update tabs definition to use reportId
   const tabs = [
     {
       label: 'Permanent Details',
       icon: <FaUser />,
-      subtabs: ['Company Details', 'Owner Information']
+      basePath: '/permanent-details',
+      subtabs: [
+        { label: 'Company Details', path: 'company-details' },
+        { label: 'Owner Information', path: 'owner-information' }
+      ]
     },
     {
       label: 'Income Details',
       icon: <FaFileAlt />,
-      subtabs: ['Monthly Expense', 'Assets', 'Sales & Revenue']
+      basePath: '/income-details',
+      subtabs: [
+        { label: 'Monthly Expense', path: 'monthly-expense' },
+        { label: 'Assets', path: 'assets' },
+        { label: 'Sales & Revenue', path: 'sales-revenue' }
+      ]
     },
     {
       label: 'Loan Details',
       icon: <FaCog />,
-      subtabs: ['Term Loan', 'Working Capital Loan', 'Loan Settings']
+      basePath: '/loan-details',
+      subtabs: [
+        { label: 'Term Loan', path: 'term-loan' },
+        { label: 'Working Capital Loan', path: 'working-capital-loan' },
+        { label: 'Loan Settings', path: 'loan-settings' }
+      ]
     },
     {
       label: 'Final',
       icon: <FaCog />,
-      subtabs: ['PDF Report', 'PDF Settings', 'Business Profile', 'Annexure']
+      basePath: '/final-details',
+      subtabs: [
+        { label: 'PDF Report', path: reportId ? `pdf-report/${reportId}` : 'pdf-report' },
+        { label: 'PDF Settings', path: reportId ? `pdf-settings/${reportId}` : 'pdf-settings' },
+        { label: 'Business Profile', path: reportId ? `business-profile/${reportId}` : 'business-profile' },
+        { label: 'Annexure', path: reportId ? `annexure/${reportId}` : 'annexure' }
+      ]
     }
   ];
 
-  const renderContent = (tabIndex, subtabIndex) => {
-    if (tabIndex === 0) {
-      if (subtabIndex === 0) {
-        return <CompanyDetails />;
-      } else if (subtabIndex === 1) {
-        return <OwnerInformation />;
-      }
+  // Find active tab based on current path
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const tabIndex = tabs.findIndex(tab => currentPath.includes(tab.basePath));
+    if (tabIndex !== -1) {
+      setActiveTab(tabIndex);
+      // Find active subtab
+      const subtabIndex = tabs[tabIndex].subtabs.findIndex(
+        subtab => currentPath.includes(subtab.path)
+      );
+      setActiveSubTab(subtabIndex !== -1 ? subtabIndex : 0);
     }
-    return (
-      <div className="p-4">
-        <h3 className="text-xl font-semibold mb-4">
-          {tabs[tabIndex].subtabs[subtabIndex]}
-        </h3>
-        <p className="text-gray-600">Content coming soon...</p>
-      </div>
-    );
+  }, [location.pathname]);
+
+  useEffect(() => {
+    // Set initial route for each section if we're at the base path
+    const currentTab = tabs[activeTab];
+    if (location.pathname === currentTab.basePath) {
+      navigate(`${currentTab.basePath}/${currentTab.subtabs[0].path}`);
+    }
+  }, [activeTab, location.pathname]);
+
+  // Add effect to update reportId when URL changes
+  useEffect(() => {
+    const pathSegments = location.pathname.split('/');
+    const possibleId = pathSegments[pathSegments.length - 1];
+    if (possibleId && possibleId.length === 24) { // Assuming MongoDB ObjectId length
+      setReportId(possibleId);
+    }
+  }, [location.pathname]);
+
+  const handleTabClick = (tabIndex) => {
+    setActiveTab(tabIndex);
+    setActiveSubTab(0);
+    navigate(`${tabs[tabIndex].basePath}/${tabs[tabIndex].subtabs[0].path}`);
+  };
+
+  // Update handleSubTabClick function
+  const handleSubTabClick = (tabIndex, subtabIndex) => {
+    setActiveTab(tabIndex);
+    setActiveSubTab(subtabIndex);
+    const currentTab = tabs[tabIndex];
+    const subtab = currentTab.subtabs[subtabIndex];
+    
+    if (!reportId && currentTab.label === 'Final') {
+      toast.error('Please select a report first');
+      navigate('/');
+      return;
+    }
+    
+    navigate(`${currentTab.basePath}/${subtab.path}`);
   };
 
   return (
@@ -171,7 +233,7 @@ const UserDetails = () => {
             <TabButton
               key={index}
               active={activeTab === index}
-              onClick={() => setActiveTab(index)}
+              onClick={() => handleTabClick(index)}
             >
               {tab.icon}
               {tab.label}
@@ -185,24 +247,21 @@ const UserDetails = () => {
               <SubTabButton
                 key={index}
                 active={activeSubTab === index}
-                onClick={() => setActiveSubTab(index)}
+                onClick={() => handleSubTabClick(activeTab, index)}
               >
-                {subtab}
+                {subtab.label}
               </SubTabButton>
             ))}
           </VerticalSubTabs>
 
-          <AnimatePresence mode="wait">
-            <TabContent
-              key={`${activeTab}-${activeSubTab}`}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {renderContent(activeTab, activeSubTab)}
-            </TabContent>
-          </AnimatePresence>
+          <TabContent
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Outlet />
+          </TabContent>
         </ContentContainer>
       </TabContainer>
     </Layout>

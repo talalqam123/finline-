@@ -45,6 +45,11 @@ const formDataSchema = new mongoose.Schema({
     registrationType: String,
     phone: String,
     email: String
+  },
+  status: {
+    type: String,
+    enum: ['In Progress', 'Completed', 'Pending'],
+    default: 'In Progress'
   }
 }, {
   timestamps: true
