@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://finline-backend.vercel.app/api';
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://finline-backend.vercel.app/api'
+  : 'http://localhost:5000/api';
 
 // Add request interceptor for debugging
 axios.interceptors.request.use(request => {
@@ -33,7 +35,7 @@ const axiosInstance = axios.create({
 const api = {
   submitForm: async (formData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/forms/submit`, formData);
+      const response = await axiosInstance.post('/forms/submit', formData);
       return response.data;
     } catch (error) {
       if (error.response) {
