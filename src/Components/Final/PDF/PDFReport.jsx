@@ -2,10 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import api from '../../services/api';
+import api from '../../../services/api';
 import Settings from './settings';
 import { toast } from 'react-toastify';
-import CoverPageSettings from './PDF/CoverPageSettings';
 
 const PDFReport = () => {
   const [reportData, setReportData] = useState(null);
@@ -14,10 +13,6 @@ const PDFReport = () => {
   const componentRef = useRef();
   const { id } = useParams();
   const navigate = useNavigate();
-  const [coverImages, setCoverImages] = useState({
-    leftImage: '/public/manufacturing.svg',
-    rightImage: '/public/calculator.svg'
-  });
 
   useEffect(() => {
     if (!id) {
@@ -108,14 +103,47 @@ const PDFReport = () => {
     }
   };
 
-  const handleCoverImagesChange = (newImages) => {
-    setCoverImages(newImages);
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="bg-white rounded-xl shadow-lg p-8">
-        {/* Settings Section */}
+        {/* Report Title and Hero Section */}
+        <div className="mb-12 text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl font-bold mb-4"
+          >
+            <span className="text-black">PROJECT</span>{' '}
+            <span className="text-purple-600">REPORT</span>
+          </motion.h1>
+          
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex justify-center items-center gap-8 mt-8"
+          >
+            {/* Left Side Illustration */}
+            <div className="flex-1 max-w-md">
+              <img 
+                src="/public/manufacturing.svg" 
+                alt="Project Report Illustration" 
+                className="w-full h-auto"
+              />
+            </div>
+            
+            {/* Right Side Illustration */}
+            <div className="flex-1 max-w-md">
+              <img 
+                src="/public/calculator.svg" 
+                alt="Financial Calculator Illustration" 
+                className="w-full h-auto"
+              />
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Settings and Actions */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -123,7 +151,6 @@ const PDFReport = () => {
           className="mb-8"
         >
           <Settings onSettingsChange={setSettings} />
-          <CoverPageSettings onSettingsChange={handleCoverImagesChange} />
           
           <div className="flex justify-center gap-4 mt-6">
             <button 
@@ -142,41 +169,6 @@ const PDFReport = () => {
             </button>
           </div>
         </motion.div>
-
-        {/* Report Title and Hero Section */}
-        <div className="mb-12 text-center">
-          <motion.h1 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-bold mb-4"
-          >
-            <span className="text-black">PROJECT</span>{' '}
-            <span className="text-purple-600">REPORT</span>
-          </motion.h1>
-          
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex justify-center items-center gap-8 mt-8"
-          >
-            <div className="flex-1 max-w-md">
-              <img 
-                src={coverImages.leftImage}
-                alt="Project Report Illustration" 
-                className="w-full h-auto"
-              />
-            </div>
-            
-            <div className="flex-1 max-w-md">
-              <img 
-                src={coverImages.rightImage}
-                alt="Financial Calculator Illustration" 
-                className="w-full h-auto"
-              />
-            </div>
-          </motion.div>
-        </div>
 
         {/* Report Preview */}
         <motion.div 

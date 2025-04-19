@@ -14,10 +14,11 @@ import SalesRevenue from "./Components/Income Details/SalesRevenue";
 import TermLoan from "./Components/Loan Details/TermLoan";
 import WorkingCapitalLoan from "./Components/Loan Details/WorkingCapitalLoan";
 import LoanSettings from "./Components/Loan Details/LoanSettings";
-import PDFReport from "./Components/Final/PDFReport";
+import PDFReport from "./Components/Final/PDF/PDFReport";
 import PDFSettings from "./Components/Final/PDFSettings";
 import BusinessProfile from "./Components/Final/BusinessProfile";
 import Annexure from "./Components/Final/Annexure";
+import CoverPageSettings from "./Components/Final/PDF/CoverPageSettings";
 
 const App = () => {
   return (
@@ -54,7 +55,7 @@ const App = () => {
         <Route path="/final-details" element={<UserDetails />}>
           <Route index element={<Navigate to="pdf-report" replace />} />
           <Route path="pdf-report/:id" element={<PDFReport />} />
-          <Route path="pdf-settings/:id" element={<PDFSettings />} />
+          <Route path="pdf-settings/:id" element={<CoverPageSettings />} />
           <Route path="business-profile/:id" element={<BusinessProfile />} />
           <Route path="annexure/:id" element={<Annexure />} />
         </Route>

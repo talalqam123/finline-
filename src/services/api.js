@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
+const API_BASE_URL = process.env.NODE_ENV === 'development' 
   ? 'https://finline-backend.vercel.app/api'
   : 'http://localhost:5000/api';
 

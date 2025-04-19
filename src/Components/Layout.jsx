@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { HiOutlineUserCircle, HiMenuAlt3, HiX } from "react-icons/hi";
 import { motion } from "framer-motion";
 
 export default function Layout({ children }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50">
@@ -15,8 +17,10 @@ export default function Layout({ children }) {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent"
+                        onClick={() => navigate('/')}
+                        
                     >
-                        FinLine
+                     <a href="#"> FinLine</a>  
                     </motion.div>
 
                     {/* Desktop Menu */}

@@ -11,9 +11,13 @@ import { toast } from 'react-toastify';
 
 const TabContainer = styled.div`
   width: 100%;
+  height: calc(100vh - 64px); // Adjust based on your Layout's header height
   padding: 30px;
   background: #f8f9fd;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 const HorizontalTabs = styled.div`
@@ -63,6 +67,8 @@ const ContentContainer = styled.div`
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  overflow: hidden;
 `;
 
 const VerticalSubTabs = styled.div`
@@ -70,6 +76,7 @@ const VerticalSubTabs = styled.div`
   background: #f1f5f9;
   border-radius: 12px;
   padding: 10px;
+  flex-shrink: 0;
 `;
 
 const SubTabButton = styled.button`
@@ -111,12 +118,32 @@ const SubTabButton = styled.button`
 const TabContent = styled(motion.div)`
   flex: 1;
   padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   h3 {
     color: #1e293b;
     font-size: 24px;
     margin-bottom: 20px;
     font-weight: 600;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
   }
 `;
 
