@@ -253,23 +253,23 @@ export default function FormWizardSample() {
           <div className="flex flex-col gap-6">
             <div className="flex gap-4 p-6 bg-gray-50 rounded-lg">
               <div className="flex-shrink-0">
-                <span className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-semibold">
+                <span className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-semibold text-sm">
                   1
                 </span>
               </div>
               <div className="flex-grow">
-                <h3 className="text-xl font-semibold mb-1">What's the name of your business entity?</h3>
-                <p className="text-gray-600 mb-4">Enter the whole legal name.</p>
+                <h3 className="text-lg font-semibold mb-1">What's the name of your business entity?</h3>
+                <p className="text-gray-600 mb-4 text-sm">Enter the whole legal name.</p>
                 <input
                   type="text"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   placeholder="Enter business name"
                 />
                 {errors.fullName && (
-                  <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>
+                  <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
                 )}
               </div>
             </div>
@@ -320,7 +320,7 @@ export default function FormWizardSample() {
                         setFormData(prev => ({ ...prev, industry: option.id }));
                         setErrors(prev => ({ ...prev, industry: '' }));
                       }}
-                      className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all
+                      className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all text-sm
                         ${formData.industry === option.id 
                           ? 'border-blue-500 bg-blue-50' 
                           : 'border-gray-200 hover:border-blue-200'}`}

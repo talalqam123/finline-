@@ -6,6 +6,38 @@ import { useNavigate } from "react-router-dom";
 import Layout from './Layout';
 import api from '../services/api';
 import { toast } from 'react-toastify';
+import { Skeleton } from "@/Components/ui/skeleton";
+
+const TableSkeleton = () => (
+  <div className="w-full">
+    {/* Table Header Skeleton */}
+    <div className="bg-gradient-to-r from-slate-50 to-gray-50">
+      <div className="grid grid-cols-6 gap-4 px-6 py-4">
+        {[...Array(6)].map((_, i) => (
+          <Skeleton key={i} className="h-6 w-full bg-slate-200/60" />
+        ))}
+      </div>
+    </div>
+
+    {/* Table Rows Skeleton */}
+    <div className="divide-y divide-gray-100">
+      {[...Array(5)].map((_, rowIndex) => (
+        <div key={rowIndex} className="grid grid-cols-6 gap-4 px-6 py-4 hover:bg-slate-50/50 transition-colors duration-200">
+          <Skeleton className="h-6 w-full bg-slate-100/60" />
+          <Skeleton className="h-6 w-full bg-slate-100/60" />
+          <Skeleton className="h-6 w-full bg-slate-100/60" />
+          <Skeleton className="h-6 w-full bg-slate-100/60" />
+          <div className="flex items-center">
+            <Skeleton className="h-6 w-24 rounded-full bg-slate-100/60" />
+          </div>
+          <div className="flex items-center">
+            <Skeleton className="h-6 w-28 bg-slate-100/60" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 export default function Dashboard() {
   const [isHovered, setIsHovered] = useState(null);
@@ -53,127 +85,122 @@ export default function Dashboard() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-8"
+        className="max-w-7xl mx-auto"
       >
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            Welcome back, <span className="text-blue-600">User!</span>
-          </h1>
-          <p className="text-gray-600 mt-1">Here's an overview of your reports</p>
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
+          {isLoading ? (
+            <div className="space-y-3 w-full sm:w-auto">
+              <Skeleton className="h-10 w-64 bg-slate-200" />
+              <Skeleton className="h-6 w-48 bg-slate-100" />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                Welcome back, User!
+              </h1>
+              <p className="text-slate-600 text-lg">Here's an overview of your reports</p>
+            </div>
+          )}
+          
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => navigate('/create-report')}
+            className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-indigo-500/25 transition-all duration-300"
+          >
+            <AiOutlinePlus className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
+            <span className="font-medium">Create Report</span>
+          </motion.button>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => navigate('/create-report')}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-        >
-          <AiOutlinePlus className="h-5 w-5" />
-          <span>Create Report</span>
-        </motion.button>
-      </motion.div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100"
-      >
-        {isLoading ? (
-          <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading reports...</p>
-          </div>
-        ) : reports.length === 0 ? (
-          <div className="p-8 text-center">
-            <p className="text-gray-600">No reports found. Create your first report!</p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/create-report')}
-              className="mt-4 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-6 py-3 rounded-lg"
-            >
-              Create Report
-            </motion.button>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Business Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Business Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Loan Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Created Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <AnimatePresence>
-                  {reports.map((report, index) => (
-                    <motion.tr 
-                      key={report.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ delay: index * 0.1 }}
-                      onHoverStart={() => setIsHovered(report.id)}
-                      onHoverEnd={() => setIsHovered(null)}
-                      className={`transition-colors duration-200 ${
-                        isHovered === report.id ? 'bg-blue-50' : ''
-                      }`}
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {report.reportName}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {report.type}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {report.loanType}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {report.date}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <motion.span
-                          whileHover={{ scale: 1.05 }}
-                          className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            ${report.status === 'Completed' ? 'bg-green-100 text-green-800' : 
-                            report.status === 'In Progress' ? 'bg-blue-100 text-blue-800' : 
-                            'bg-yellow-100 text-yellow-800'}`}
-                        >
-                          {report.status}
-                        </motion.span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="text-indigo-600 hover:text-indigo-800 font-medium"
-                          onClick={() => navigate(`/final-details/pdf-report/${report.id}`)}
-                        >
-                          View Details
-                        </motion.button>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </AnimatePresence>
-              </tbody>
-            </table>
-          </div>
-        )}
+        {/* Reports Table Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+        >
+          {isLoading ? (
+            <TableSkeleton />
+          ) : reports.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="mb-6">
+                <svg className="mx-auto h-24 w-24 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <p className="text-slate-600 text-lg mb-6">No reports found. Start by creating your first report!</p>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => navigate('/create-report')}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-indigo-500/25 transition-all duration-300"
+              >
+                <AiOutlinePlus className="h-5 w-5" />
+                <span className="font-medium">Create First Report</span>
+              </motion.button>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gradient-to-r from-slate-50 to-gray-50">
+                    {["Business Name", "Business Type", "Loan Type", "Created Date", "Status", "Actions"].map((header) => (
+                      <th key={header} className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  <AnimatePresence>
+                    {reports.map((report, index) => (
+                      <motion.tr 
+                        key={report.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ delay: index * 0.1 }}
+                        className={`group hover:bg-slate-50 transition-colors duration-200`}
+                      >
+                        <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                          {report.reportName}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-600">
+                          {report.type}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-600">
+                          {report.loanType}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-600">
+                          {report.date}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-4 py-1.5 text-xs font-semibold rounded-full inline-flex items-center
+                            ${report.status === 'Completed' ? 'bg-green-50 text-green-700' : 
+                            report.status === 'In Progress' ? 'bg-blue-50 text-blue-700' : 
+                            'bg-amber-50 text-amber-700'}`}>
+                            {report.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => navigate(`/final-details/pdf-report/${report.id}`)}
+                            className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
+                          >
+                            View Details →
+                          </motion.button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+            </div>
+          )}
+        </motion.div>
       </motion.div>
     </Layout>
   );

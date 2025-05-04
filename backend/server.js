@@ -16,7 +16,8 @@ app.use(cors({
     'http://localhost:3000', 
     'http://localhost:5173', 
     'http://127.0.0.1:5173',
-    'https://finline.vercel.app'  // Add your deployed frontend URL
+    'https://finline.vercel.app',
+    'http://192.168.1.4:5174'  // Add your network IP
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -39,6 +40,11 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/forms', formRoutes);
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Error handling middleware should be last
 app.use((err, req, res, next) => {
   console.error('Server Error:', err);
@@ -49,6 +55,7 @@ app.use((err, req, res, next) => {
 })
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`Access the API at http://192.168.1.4:${PORT}`);
 });

@@ -1,8 +1,30 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://finline-backend.vercel.app/api'
-  : 'http://localhost:5000/api';
+const LOCAL_API_URL = 'http://192.168.1.4:5000/api';
+const PROD_API_URL = 'https://finline-backend.vercel.app/api';
+
+// Function to check if local server is available
+const checkLocalServer = async () => {
+  try {
+    await axios.get(`${LOCAL_API_URL}/health`, { timeout: 2000 });
+    return true;
+  } catch (error) {
+    console.log('Local server not available, using production server');
+    return false;
+  }
+};
+
+// Initialize API_BASE_URL with production URL by default
+let API_BASE_URL = PROD_API_URL;
+
+// Set up the base URL based on environment and local server availability
+if (process.env.NODE_ENV === 'development') {
+  checkLocalServer().then(isLocalAvailable => {
+    if (isLocalAvailable) {
+      API_BASE_URL = LOCAL_API_URL;
+    }
+  });
+}
 
 // Add request interceptor for debugging
 axios.interceptors.request.use(request => {
@@ -128,6 +150,20 @@ const api = {
       console.error('Download Report Error:', error);
       throw new Error(error.response?.data?.error || 'Failed to download report');
     }
+  }
+};
+
+const downloadReport = async (id) => {
+  try {
+    const response = await axios({
+      url: `${BASE_URL}/api/forms/download-report/${id}`,
+      method: 'GET',
+      responseType: 'arraybuffer', // Important for receiving binary data
+    });
+    return response;
+  } catch (error) {
+    console.error('Download error:', error);
+    throw error;
   }
 };
 

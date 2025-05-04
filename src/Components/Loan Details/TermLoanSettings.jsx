@@ -1,47 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaCalculator, FaFileInvoiceDollar, FaChartPie, FaMoneyBillWave, FaPercentage, FaEdit, FaCalendarAlt } from 'react-icons/fa';
+import { FaCalculator, FaFileInvoiceDollar, FaChartPie, FaMoneyBillWave, FaPercentage, FaEdit } from 'react-icons/fa';
+import { useApp } from '../../context/AppContext';
 
-const TermLoan = () => {
+const TermLoanSettings = () => {
   const [activeTab, setActiveTab] = useState('details');
-  const [loanDetails, setLoanDetails] = useState({
-    amount: '',
-    tenure: '',
-    interestRate: '',
-  });
+  const { state, updateTermLoan } = useApp();
+  const { termLoan } = state.loanDetails;
+
   const [emiResult, setEmiResult] = useState(null);
 
-  const [netInvestment, setNetInvestment] = useState(10.00);
-  const [ownContributionPercent, setOwnContributionPercent] = useState(10.00);
-  const [ownContribution, setOwnContribution] = useState(1.00);
-  const [termLoanAmount, setTermLoanAmount] = useState(9.00);
-
-  const [loanStartDate, setLoanStartDate] = useState('2025-04-01');
-  const [calculationType, setCalculationType] = useState('e'); // 'e' for EMI, 'p' for principal
-  const [emiCalculation, setEmiCalculation] = useState('1'); // '1' for auto, '0' for manual
-  const [moratoriumMonths, setMoratoriumMonths] = useState('0');
-  const [monthlyInstallment, setMonthlyInstallment] = useState('0.20');
+  // Keep netInvestment and related calculations from assets
+  const { assets } = state.incomeDetails;
+  const netInvestment = assets.totalAsset - assets.subsidy;
+  const ownContribution = (netInvestment * assets.ownContributionPercent) / 100;
+  const termLoanAmount = netInvestment - ownContribution;
 
   useEffect(() => {
-    // Calculate contribution amount when percentage changes
-    const contributionAmount = (netInvestment * ownContributionPercent) / 100;
-    setOwnContribution(contributionAmount.toFixed(2));
-    setTermLoanAmount((netInvestment - contributionAmount).toFixed(2));
-  }, [ownContributionPercent, netInvestment]);
+    updateTermLoan({
+      amount: termLoanAmount,
+      startDate: termLoan.startDate || '2025-04-01'
+    });
+  }, [termLoanAmount]);
 
-  const handleContributionChange = (value) => {
-    const contribution = parseFloat(value);
-    if (contribution <= netInvestment) {
-      setOwnContribution(contribution);
-      setOwnContributionPercent((contribution / netInvestment * 100).toFixed(2));
-      setTermLoanAmount((netInvestment - contribution).toFixed(2));
-    }
+  const handleTermLoanUpdate = (updates) => {
+    updateTermLoan(updates);
   };
 
   const calculateEMI = () => {
-    const principal = parseFloat(loanDetails.amount);
-    const rateOfInterest = parseFloat(loanDetails.interestRate) / 12 / 100;
-    const tenure = parseFloat(loanDetails.tenure) * 12;
+    const principal = parseFloat(termLoan.amount);
+    const rateOfInterest = parseFloat(termLoan.interestRate) / 12 / 100;
+    const tenure = parseFloat(termLoan.tenure) * 12;
 
     const emi = principal * rateOfInterest * Math.pow(1 + rateOfInterest, tenure) / (Math.pow(1 + rateOfInterest, tenure) - 1);
     const totalAmount = emi * tenure;
@@ -153,14 +142,14 @@ const TermLoan = () => {
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <label className="text-gray-700 font-medium">Contribution Percentage</label>
-                  <span className="text-indigo-600 font-bold">{ownContributionPercent}%</span>
+                  <span className="text-indigo-600 font-bold">{assets.ownContributionPercent}%</span>
                 </div>
                 <input
                   type="range"
                   min="0"
                   max="100"
-                  value={ownContributionPercent}
-                  onChange={(e) => setOwnContributionPercent(e.target.value)}
+                  value={assets.ownContributionPercent}
+                  onChange={(e) => handleTermLoanUpdate({ ownContributionPercent: e.target.value })}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                 />
 
@@ -173,7 +162,7 @@ const TermLoan = () => {
                     <input
                       type="number"
                       value={ownContribution}
-                      onChange={(e) => handleContributionChange(e.target.value)}
+                      onChange={(e) => handleTermLoanUpdate({ ownContribution: e.target.value })}
                       className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     />
                   </div>
@@ -248,8 +237,8 @@ const TermLoan = () => {
                 <div className="flex">
                   <input
                     type="number"
-                    value={loanDetails.interestRate}
-                    onChange={(e) => setLoanDetails({...loanDetails, interestRate: e.target.value})}
+                    value={termLoan.interestRate}
+                    onChange={(e) => handleTermLoanUpdate({ interestRate: e.target.value })}
                     className="w-full p-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
                   <span className="bg-gray-100 px-4 flex items-center border border-l-0 border-gray-300 rounded-r-lg">
@@ -261,8 +250,8 @@ const TermLoan = () => {
               <div className="space-y-2">
                 <label className="text-gray-700 font-medium">Select Loan Tenure</label>
                 <select
-                  value={loanDetails.tenure}
-                  onChange={(e) => setLoanDetails({...loanDetails, tenure: e.target.value})}
+                  value={termLoan.tenure}
+                  onChange={(e) => handleTermLoanUpdate({ tenure: e.target.value })}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 >
                   {[...Array(25)].map((_, i) => (
@@ -274,8 +263,8 @@ const TermLoan = () => {
               <div className="space-y-2">
                 <label className="text-gray-700 font-medium">Loan Starting Date</label>
                 <select
-                  value={loanStartDate}
-                  onChange={(e) => setLoanStartDate(e.target.value)}
+                  value={termLoan.startDate}
+                  onChange={(e) => handleTermLoanUpdate({ startDate: e.target.value })}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 >
                   {generateStartDates().map(date => (
@@ -292,9 +281,9 @@ const TermLoan = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setCalculationType('p')}
+                  onClick={() => handleTermLoanUpdate({ calculationType: 'p' })}
                   className={`px-6 py-2 rounded-lg border ${
-                    calculationType === 'p' 
+                    termLoan.calculationType === 'p' 
                       ? 'bg-indigo-50 border-indigo-600 text-indigo-600' 
                       : 'border-gray-300 text-gray-700'
                   }`}
@@ -304,9 +293,9 @@ const TermLoan = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setCalculationType('e')}
+                  onClick={() => handleTermLoanUpdate({ calculationType: 'e' })}
                   className={`px-6 py-2 rounded-lg border ${
-                    calculationType === 'e'
+                    termLoan.calculationType === 'e'
                       ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
                       : 'border-gray-300 text-gray-700'
                   }`}
@@ -323,9 +312,9 @@ const TermLoan = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setEmiCalculation('1')}
+                  onClick={() => handleTermLoanUpdate({ emiCalculation: '1' })}
                   className={`px-6 py-2 rounded-lg border ${
-                    emiCalculation === '1'
+                    termLoan.emiCalculation === '1'
                       ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
                       : 'border-gray-300 text-gray-700'
                   }`}
@@ -335,9 +324,9 @@ const TermLoan = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setEmiCalculation('0')}
+                  onClick={() => handleTermLoanUpdate({ emiCalculation: '0' })}
                   className={`px-6 py-2 rounded-lg border ${
-                    emiCalculation === '0'
+                    termLoan.emiCalculation === '0'
                       ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
                       : 'border-gray-300 text-gray-700'
                   }`}
@@ -348,9 +337,9 @@ const TermLoan = () => {
 
               <input
                 type="number"
-                value={monthlyInstallment}
-                onChange={(e) => setMonthlyInstallment(e.target.value)}
-                readOnly={emiCalculation === '1'}
+                value={termLoan.monthlyInstallment}
+                onChange={(e) => handleTermLoanUpdate({ monthlyInstallment: e.target.value })}
+                readOnly={termLoan.emiCalculation === '1'}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Monthly installment"
               />
@@ -360,8 +349,8 @@ const TermLoan = () => {
                   Principle repayment moratorium months
                 </label>
                 <select
-                  value={moratoriumMonths}
-                  onChange={(e) => setMoratoriumMonths(e.target.value)}
+                  value={termLoan.moratoriumMonths}
+                  onChange={(e) => handleTermLoanUpdate({ moratoriumMonths: e.target.value })}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 >
                   {[...Array(37)].map((_, i) => (
@@ -395,4 +384,4 @@ const TermLoan = () => {
   );
 };
 
-export default TermLoan;
+export default TermLoanSettings;

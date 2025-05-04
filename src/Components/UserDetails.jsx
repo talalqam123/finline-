@@ -4,114 +4,131 @@ import { useNavigate, useParams, useLocation, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaUser, FaFileAlt, FaCog } from 'react-icons/fa';
 import Layout from './Layout';
-import CompanyDetails from './Permanent Details/CompanyDetails';
-import OwnerInformation from './Permanent Details/OwnerInformation';
+import CompanyDetails from './Company Details/BasicDetails';
+import OwnerInformation from './Company Details/OwnerInformation';
 import MonthlyExpense from './Income Details/MonthlyExpense';
 import { toast } from 'react-toastify';
 
 const TabContainer = styled.div`
   width: 100%;
-  height: calc(100vh - 64px); // Adjust based on your Layout's header height
-  padding: 30px;
-  background: #f8f9fd;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  min-height: calc(100vh - 64px);
+  padding: 24px;
+  // background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    gap: 16px;
+  }
 `;
 
 const HorizontalTabs = styled.div`
   display: grid;
   grid-template-columns: repeat(${props => props.tabCount}, 1fr);
-  gap: 15px;
-  margin-bottom: 40px;
-  padding: 5px;
+  gap: 12px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const TabButton = styled.button`
-  padding: 16px 24px;
+  padding: 14px;
   border: none;
   background: ${props => props.active ?
-    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' :
-    'rgba(255, 255, 255, 0.8)'};
+    'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' :
+    'rgba(255, 255, 255, 0.9)'};
   cursor: pointer;
-  font-size: 16px;
-  position: relative;
-  color: ${props => props.active ? '#ffffff' : '#64748b'};
-  transition: all 0.4s ease;
-  border-radius: 12px;
+  font-size: 13px;
+  color: ${props => props.active ? '#ffffff' : '#475569'};
+  transition: all 0.3s ease;
+  border-radius: 16px;
   font-weight: ${props => props.active ? '600' : '500'};
   box-shadow: ${props => props.active ?
-    '0 10px 20px rgba(99, 102, 241, 0.2)' :
-    '0 4px 6px rgba(0, 0, 0, 0.05)'};
+    '0 10px 25px -5px rgba(79, 70, 229, 0.25)' :
+    '0 4px 6px -1px rgba(0, 0, 0, 0.05)'};
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   transform: ${props => props.active ? 'translateY(-2px)' : 'none'};
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.2);
   }
 
   svg {
-    font-size: 20px;
+    font-size: 16px;
   }
 `;
 
 const ContentContainer = styled.div`
   display: flex;
-  gap: 30px;
+  gap: 24px;
   background: white;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  flex: 1;
-  overflow: hidden;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  min-height: 600px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 16px;
+  }
 `;
 
 const VerticalSubTabs = styled.div`
   width: 250px;
-  background: #f1f5f9;
-  border-radius: 12px;
-  padding: 10px;
-  flex-shrink: 0;
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 12px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const SubTabButton = styled.button`
   width: 100%;
-  padding: 14px 20px;
+  padding: 12px 16px;
   text-align: left;
   border: none;
   background: ${props => props.active ?
-    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' :
+    'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' :
     'transparent'};
   cursor: pointer;
-  color: ${props => props.active ? '#ffffff' : '#64748b'};
+  color: ${props => props.active ? '#ffffff' : '#475569'};
   transition: all 0.3s ease;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 8px;
   font-weight: ${props => props.active ? '600' : '500'};
-  position: relative;
-  overflow: hidden;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
   &:hover {
     background: ${props => props.active ?
-    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' :
-    'rgba(99, 102, 241, 0.1)'};
-    color: ${props => props.active ? '#ffffff' : '#6366f1'};
+    'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' :
+    'rgba(79, 70, 229, 0.1)'};
+    color: ${props => props.active ? '#ffffff' : '#4f46e5'};
   }
 
   &::before {
     content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    background: ${props => props.active ? '#ffffff' : 'transparent'};
-    border-radius: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: ${props => props.active ? '#ffffff' : '#94a3b8'};
   }
 `;
 
@@ -119,27 +136,28 @@ const TabContent = styled(motion.div)`
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  overflow-x: hidden;
+  background: #ffffff;
+  border-radius: 16px;
 
   h3 {
     color: #1e293b;
     font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     font-weight: 600;
   }
 
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
 
   &::-webkit-scrollbar-track {
     background: #f1f5f9;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: #cbd5e1;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -158,12 +176,14 @@ const UserDetails = () => {
   // Update tabs definition to use reportId
   const tabs = [
     {
-      label: 'Permanent Details',
+      label: 'Company Details',
       icon: <FaUser />,
-      basePath: '/permanent-details',
+      basePath: '/company-details',
       subtabs: [
-        { label: 'Company Details', path: 'company-details' },
-        { label: 'Owner Information', path: 'owner-information' }
+        { label: 'Basic Details', path: 'basic-details' },
+        { label: 'Owner Information', path: 'owner-information' },
+        { label: 'Business Profile', path: reportId ? `business-profile/${reportId}` : 'business-profile' },
+        { label: 'Annexure', path: reportId ? `annexure/${reportId}` : 'annexure' }
       ]
     },
     {
@@ -172,7 +192,7 @@ const UserDetails = () => {
       basePath: '/income-details',
       subtabs: [
         { label: 'Monthly Expense', path: 'monthly-expense' },
-        { label: 'Assets', path: 'assets' },
+      
         { label: 'Sales & Revenue', path: 'sales-revenue' }
       ]
     },
@@ -181,7 +201,8 @@ const UserDetails = () => {
       icon: <FaCog />,
       basePath: '/loan-details',
       subtabs: [
-        { label: 'Term Loan', path: 'term-loan' },
+        { label: 'Term Loan (1)', path: 'term-loan-1' },
+        { label: 'Term Loan (2)', path: 'term-loan-2' },
         { label: 'Working Capital Loan', path: 'working-capital-loan' },
         { label: 'Loan Settings', path: 'loan-settings' }
       ]
@@ -193,8 +214,7 @@ const UserDetails = () => {
       subtabs: [
         { label: 'PDF Report', path: reportId ? `pdf-report/${reportId}` : 'pdf-report' },
         { label: 'PDF Settings', path: reportId ? `pdf-settings/${reportId}` : 'pdf-settings' },
-        { label: 'Business Profile', path: reportId ? `business-profile/${reportId}` : 'business-profile' },
-        { label: 'Annexure', path: reportId ? `annexure/${reportId}` : 'annexure' }
+        
       ]
     }
   ];

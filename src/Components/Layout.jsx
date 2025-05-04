@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineUserCircle, HiMenuAlt3, HiX } from "react-icons/hi";
 import { motion } from "framer-motion";
 
@@ -16,17 +16,17 @@ export default function Layout({ children }) {
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent"
+                        className="text-base sm:text-lg font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent"
                         onClick={() => navigate('/')}
                         
                     >
-                     <a href="#"> FinLine</a>  
+                     <Link> FinLine</Link>  
                     </motion.div>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-4">
-                        <button className="flex items-center text-gray-700 hover:text-blue-600 transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-blue-50">
-                            <HiOutlineUserCircle className="h-6 w-6" />
+                        <button className="flex items-center text-sm text-gray-700 hover:text-blue-600 transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-blue-50">
+                            <HiOutlineUserCircle className="h-5 w-5" />
                             <span className="ml-2">Profile</span>
                         </button>
                     </div>
@@ -69,7 +69,7 @@ export default function Layout({ children }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 text-sm"
     >
         {children}
     </motion.main>

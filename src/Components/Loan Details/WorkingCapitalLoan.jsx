@@ -1,30 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
+import { useApp } from '../../context/AppContext';
 
 const WorkingCapitalLoan = () => {
-  const [method, setMethod] = useState('percentage'); // 'percentage' or 'manual'
-  const [workingCapital, setWorkingCapital] = useState({
-    rawMaterials: 0.75,
-    workInProgress: 0.50,
-    finishedGoods: 0.75,
-    workingExpense: 0.75,
-    receivables: 0,
-    payables: 0.25,
-    totalWorkingCapital: 2.50,
-    workingCapitalLoanPercentage: 25.00,
-    // Manual method fields
-    manualLoanAmount: 2.00,
-    subsidy: 0,
-    ownContribution: 0.50,
-    interestRate: 11.00,
-    additionalNotes: ''
-  });
+  const { state, updateWorkingCapital } = useApp();
+  const { workingCapital } = state.loanDetails;
 
   const handleInputChange = (field, value) => {
-    setWorkingCapital(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    const newValue = parseFloat(value) || 0;
+    updateWorkingCapital({ [field]: newValue });
+  };
+
+  const setMethod = (method) => {
+    updateWorkingCapital({ method });
   };
 
   return (
@@ -42,7 +30,7 @@ const WorkingCapitalLoan = () => {
           <button
             onClick={() => setMethod('percentage')}
             className={`px-4 py-2 rounded-lg ${
-              method === 'percentage' 
+              workingCapital.method === 'percentage' 
                 ? 'bg-indigo-500 text-white' 
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
@@ -52,7 +40,7 @@ const WorkingCapitalLoan = () => {
           <button
             onClick={() => setMethod('manual')}
             className={`px-4 py-2 rounded-lg ${
-              method === 'manual' 
+              workingCapital.method === 'manual' 
                 ? 'bg-indigo-500 text-white' 
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
@@ -62,7 +50,7 @@ const WorkingCapitalLoan = () => {
         </div>
       </div>
 
-      {method === 'percentage' ? (
+      {workingCapital.method === 'percentage' ? (
         // Percentage Based Method
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-6">
@@ -82,7 +70,7 @@ const WorkingCapitalLoan = () => {
                   type="number"
                   step="0.01"
                   value={workingCapital[item.field]}
-                  onChange={(e) => handleInputChange(item.field, parseFloat(e.target.value))}
+                  onChange={(e) => handleInputChange(item.field, e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
               </div>
@@ -112,7 +100,7 @@ const WorkingCapitalLoan = () => {
                     type="number"
                     step="0.01"
                     value={workingCapital.workingCapitalLoanPercentage}
-                    onChange={(e) => handleInputChange('workingCapitalLoanPercentage', parseFloat(e.target.value))}
+                    onChange={(e) => handleInputChange('workingCapitalLoanPercentage', e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
                   <span className="absolute right-3 top-2 text-gray-500">%</span>
@@ -133,7 +121,7 @@ const WorkingCapitalLoan = () => {
                 type="number"
                 step="0.01"
                 value={workingCapital.manualLoanAmount}
-                onChange={(e) => handleInputChange('manualLoanAmount', parseFloat(e.target.value))}
+                onChange={(e) => handleInputChange('manualLoanAmount', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
@@ -145,7 +133,7 @@ const WorkingCapitalLoan = () => {
                 type="number"
                 step="0.01"
                 value={workingCapital.subsidy}
-                onChange={(e) => handleInputChange('subsidy', parseFloat(e.target.value))}
+                onChange={(e) => handleInputChange('subsidy', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
@@ -157,7 +145,7 @@ const WorkingCapitalLoan = () => {
                 type="number"
                 step="0.01"
                 value={workingCapital.ownContribution}
-                onChange={(e) => handleInputChange('ownContribution', parseFloat(e.target.value))}
+                onChange={(e) => handleInputChange('ownContribution', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
@@ -170,7 +158,7 @@ const WorkingCapitalLoan = () => {
                   type="number"
                   step="0.01"
                   value={workingCapital.interestRate}
-                  onChange={(e) => handleInputChange('interestRate', parseFloat(e.target.value))}
+                  onChange={(e) => handleInputChange('interestRate', e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
                 <span className="absolute right-3 top-2 text-gray-500">%</span>
