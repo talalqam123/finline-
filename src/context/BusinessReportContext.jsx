@@ -1,44 +1,25 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { demoData } from '../lib/data';
+
 const BusinessReportContext = createContext();
-const initialState = demoData;
-// const initialState = {
-//   project: {
-//     name: "",
-//     address: "",
-//     status: "",
-//     industry: "",
-//     sector: "",
-//     constitution: "",
-//     incorporationDate: "",
-//     location: "",
-//     contactPerson: "",
-//     cost: 0,
-//     termLoan: 0,
-//     workingCapital: 0,
-//     netWorth: 0,
-//     year: new Date().getFullYear().toString(),
-//     email: ""
-//   },
-//   promoters: [],
-//   financials: {
-//     projections: [],
-//     chartData: [],
-//     revenueSourceData: []
-//   },
-//   scope: {
-//     paragraphs: []
-//   },
-//   market: {
-//     paragraphs: [],
-//     list: [],
-//     paragraphs2: []
-//   },
-//   risks: [],
-//   projectCost: [],
-//   workingCapital: [],
-//   applicationOfFunds: []
-// };
+
+const initialState = {
+  ...demoData,
+  annexure: {
+    assumptions: '',
+    annexureText: ''
+  },
+  pdfSettings: {
+    currency: 'rupees',
+    currencySymbol: '₹',
+    moneyFormat: 'lakhs',
+    titleFormat: 'projected',
+    pageSpacing: 'none',
+    consolidatedSales: false,
+    consolidatedMachinery: false,
+    showContributionEdit: false
+  }
+};
 
 function businessReportReducer(state, action) {
   switch (action.type) {
@@ -60,6 +41,22 @@ function businessReportReducer(state, action) {
       return { ...state, workingCapital: action.payload };
     case 'UPDATE_APPLICATION_OF_FUNDS':
       return { ...state, applicationOfFunds: action.payload };
+    case 'UPDATE_ANNEXURE':
+      return { 
+        ...state, 
+        annexure: { 
+          ...state.annexure, 
+          ...action.payload 
+        } 
+      };
+    case 'UPDATE_PDF_SETTINGS':
+      return {
+        ...state,
+        pdfSettings: {
+          ...state.pdfSettings,
+          ...action.payload
+        }
+      };
     case 'RESET':
       return initialState;
     default:
@@ -150,6 +147,50 @@ export function BusinessReportProvider({ children }) {
     dispatch({ type: 'UPDATE_WORKING_CAPITAL', payload: updatedCosts });
   };
 
+  // Format money according to settings
+  const formatMoney = (value, format = state.pdfSettings?.moneyFormat) => {
+    if (!value) return `${state.pdfSettings?.currencySymbol || '₹'}0`;
+    
+    const numericValue = typeof value === 'string' ? 
+      parseFloat(value.replace(/[^0-9.-]+/g, '')) : 
+      value;
+
+    let formattedValue = numericValue;
+    
+    switch (format) {
+      case 'lakhs':
+        formattedValue = (numericValue / 100000).toFixed(2);
+        break;
+      case 'crores':
+        formattedValue = (numericValue / 10000000).toFixed(2);
+        break;
+      case 'noDecimals':
+        formattedValue = Math.round(numericValue);
+        break;
+      case 'decimals':
+        formattedValue = numericValue.toFixed(2);
+        break;
+      default:
+        formattedValue = numericValue.toFixed(2);
+    }
+
+    return `${state.pdfSettings?.currencySymbol || '₹'}${formattedValue.toLocaleString('en-IN')}`;
+  };
+
+  // Format title according to settings
+  const formatTitle = (baseTitle) => {
+    switch (state.pdfSettings?.titleFormat) {
+      case 'projected':
+        return `Projected ${baseTitle}`;
+      case 'date':
+        return `${baseTitle} (Mar 25)`;
+      case 'year':
+        return `${baseTitle} - Year 1`;
+      default:
+        return baseTitle;
+    }
+  };
+
   return (
     <BusinessReportContext.Provider 
       value={{ 
@@ -157,7 +198,9 @@ export function BusinessReportProvider({ children }) {
         dispatch,
         calculateFinancials,
         calculateProjectCosts,
-        calculateWorkingCapital
+        calculateWorkingCapital,
+        formatMoney,
+        formatTitle
       }}
     >
       {children}

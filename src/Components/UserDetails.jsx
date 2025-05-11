@@ -8,12 +8,12 @@ import CompanyDetails from './Company Details/BasicDetails';
 import OwnerInformation from './Company Details/OwnerInformation';
 import MonthlyExpense from './Income Details/MonthlyExpense';
 import { toast } from 'react-toastify';
+import { useTheme } from '../context/ThemeContext';
 
 const TabContainer = styled.div`
   width: 100%;
   min-height: calc(100vh - 64px);
   padding: 24px;
-  // background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -42,16 +42,16 @@ const TabButton = styled.button`
   border: none;
   background: ${props => props.active ?
     'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' :
-    'rgba(255, 255, 255, 0.9)'};
+    props.darkMode ? 'rgba(31, 41, 55, 0.5)' : 'rgba(255, 255, 255, 0.9)'};
   cursor: pointer;
   font-size: 13px;
-  color: ${props => props.active ? '#ffffff' : '#475569'};
+  color: ${props => props.active ? '#ffffff' : props.darkMode ? '#e5e7eb' : '#475569'};
   transition: all 0.3s ease;
   border-radius: 16px;
   font-weight: ${props => props.active ? '600' : '500'};
   box-shadow: ${props => props.active ?
     '0 10px 25px -5px rgba(79, 70, 229, 0.25)' :
-    '0 4px 6px -1px rgba(0, 0, 0, 0.05)'};
+    props.darkMode ? '0 4px 6px -1px rgba(0, 0, 0, 0.2)' : '0 4px 6px -1px rgba(0, 0, 0, 0.05)'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,6 +61,9 @@ const TabButton = styled.button`
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.2);
+    background: ${props => props.active ?
+      'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' :
+      props.darkMode ? 'rgba(55, 65, 81, 0.5)' : 'rgba(255, 255, 255, 1)'};
   }
 
   svg {
@@ -71,12 +74,15 @@ const TabButton = styled.button`
 const ContentContainer = styled.div`
   display: flex;
   gap: 24px;
-  background: white;
+  background: ${props => props.darkMode ? '#1f2937' : 'white'};
   border-radius: 24px;
   padding: 24px;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-  max-width: 1400px;
-  margin: 0 auto;
+  box-shadow: ${props => 
+    props.darkMode 
+      ? '0 10px 30px -5px rgba(0, 0, 0, 0.3)' 
+      : '0 10px 30px -5px rgba(0, 0, 0, 0.05)'};
+  // max-width: 1400px;
+  // margin: 0 auto;
   width: 100%;
   min-height: 600px;
   
@@ -88,7 +94,7 @@ const ContentContainer = styled.div`
 
 const VerticalSubTabs = styled.div`
   width: 250px;
-  background: #f8fafc;
+  background: ${props => props.darkMode ? '#111827' : '#e7eef5'};
   border-radius: 16px;
   padding: 12px;
   
@@ -106,7 +112,10 @@ const SubTabButton = styled.button`
     'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' :
     'transparent'};
   cursor: pointer;
-  color: ${props => props.active ? '#ffffff' : '#475569'};
+  color: ${props => {
+    if (props.active) return '#ffffff';
+    return props.darkMode ? '#e5e7eb' : '#475569';
+  }};
   transition: all 0.3s ease;
   border-radius: 12px;
   margin-bottom: 8px;
@@ -118,9 +127,9 @@ const SubTabButton = styled.button`
 
   &:hover {
     background: ${props => props.active ?
-    'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' :
-    'rgba(79, 70, 229, 0.1)'};
-    color: ${props => props.active ? '#ffffff' : '#4f46e5'};
+      'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' :
+      props.darkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(79, 70, 229, 0.1)'};
+    color: ${props => props.active ? '#ffffff' : props.darkMode ? '#ffffff' : '#4f46e5'};
   }
 
   &::before {
@@ -128,7 +137,10 @@ const SubTabButton = styled.button`
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: ${props => props.active ? '#ffffff' : '#94a3b8'};
+    background: ${props => {
+      if (props.active) return '#ffffff';
+      return props.darkMode ? '#6b7280' : '#94a3b8';
+    }};
   }
 `;
 
@@ -136,11 +148,11 @@ const TabContent = styled(motion.div)`
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  background: #ffffff;
+  background: ${props => props.darkMode ? '#1f2937' : '#ffffff'};
   border-radius: 16px;
 
   h3 {
-    color: #1e293b;
+    color: ${props => props.darkMode ? '#e5e7eb' : '#1e293b'};
     font-size: 24px;
     margin-bottom: 24px;
     font-weight: 600;
@@ -151,27 +163,28 @@ const TabContent = styled(motion.div)`
   }
 
   &::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: ${props => props.darkMode ? '#111827' : '#f1f5f9'};
     border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: ${props => props.darkMode ? '#374151' : '#cbd5e1'};
     border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: ${props => props.darkMode ? '#4b5563' : '#94a3b8'};
   }
 `;
 
 const UserDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = useParams(); // Add this line
+  const { id } = useParams();
   const [activeTab, setActiveTab] = useState(0);
   const [activeSubTab, setActiveSubTab] = useState(0);
-  const [reportId, setReportId] = useState(id); // Add this line
+  const [reportId, setReportId] = useState(id);
+  const { darkMode } = useTheme();
 
   // Update tabs definition to use reportId
   const tabs = [
@@ -281,6 +294,7 @@ const UserDetails = () => {
               key={index}
               active={activeTab === index}
               onClick={() => handleTabClick(index)}
+              darkMode={darkMode}
             >
               {tab.icon}
               {tab.label}
@@ -288,13 +302,14 @@ const UserDetails = () => {
           ))}
         </HorizontalTabs>
 
-        <ContentContainer>
-          <VerticalSubTabs>
+        <ContentContainer darkMode={darkMode}>
+          <VerticalSubTabs darkMode={darkMode}>
             {tabs[activeTab].subtabs.map((subtab, index) => (
               <SubTabButton
                 key={index}
                 active={activeSubTab === index}
                 onClick={() => handleSubTabClick(activeTab, index)}
+                darkMode={darkMode}
               >
                 {subtab.label}
               </SubTabButton>
@@ -306,6 +321,7 @@ const UserDetails = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
+            darkMode={darkMode}
           >
             <Outlet />
           </TabContent>

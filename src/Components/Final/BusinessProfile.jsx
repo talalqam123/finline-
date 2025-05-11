@@ -49,7 +49,7 @@ const BusinessProfile = () => {
   };
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
+    <div className="p-4 mx-auto">
       <div className="mb-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">Business Profile</h3>
         <p className="text-gray-600">Create or generate your business description</p>

@@ -92,6 +92,11 @@ body {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
 .dark {
@@ -126,6 +131,99 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: #111827;
+  color: #e5e7eb;
+}
+
+/* Inputs and form controls in dark mode */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark input[type="tel"],
+.dark input[type="url"],
+.dark input[type="search"],
+.dark textarea,
+.dark select {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="number"]:focus,
+.dark input[type="tel"]:focus,
+.dark input[type="url"]:focus,
+.dark input[type="search"]:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: #4f46e5;
+  outline: none;
+  ring-color: #4f46e5;
+}
+
+/* Tables in dark mode */
+.dark table {
+  border-color: #374151;
+}
+
+.dark th {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+.dark td {
+  border-color: #374151;
+}
+
+/* Cards and containers in dark mode */
+.dark .bg-white {
+  background-color: #1f2937;
+}
+
+.dark .border-gray-200 {
+  border-color: #374151;
+}
+
+.dark .text-gray-500 {
+  color: #9ca3af;
+}
+
+.dark .text-gray-600 {
+  color: #e5e7eb;
+}
+
+.dark .text-gray-700 {
+  color: #d1d5db;
+}
+
+.dark .text-gray-800 {
+  color: #f3f4f6;
+}
+
+.dark .text-gray-900 {
+  color: #f9fafb;
+}
+
+/* Button styles in dark mode */
+.dark .bg-gray-100 {
+  background-color: #374151;
+}
+
+.dark .hover\:bg-gray-200:hover {
+  background-color: #4b5563;
+}
+
+/* Gradients in dark mode */
+.dark .bg-gradient-to-r {
+  --tw-gradient-from: #4f46e5;
+  --tw-gradient-to: #7c3aed;
 }
 
 @layer base {
@@ -143,4 +241,196 @@ body {
   h5 { font-size: 1rem; line-height: 1.25rem; }
   h6 { font-size: 0.875rem; line-height: 1.125rem; }
 }
+
+/* Mobile-first step numbers */
+.step-number {
+  @apply flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-blue-600 text-white rounded-full font-semibold mb-4 md:mb-0 mx-auto md:mx-0;
+}
+
+/* Form section spacing */
+.form-section {
+  @apply flex flex-col md:flex-row gap-4 p-6 bg-gray-50 rounded-lg;
+}
+
+.form-section-header {
+  @apply text-center md:text-left mb-6 md:mb-0;
+}
+
+/* Better spacing for mobile inputs */
+.input-group {
+  @apply space-y-4 md:space-y-2;
+}
+
+/* Responsive grid layouts */
+.responsive-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+/* Radial Stepper Styles */
+.radial-stepper {
+  @apply relative w-full;
+}
+
+.radial-progress {
+  @apply relative w-24 h-24 rounded-full flex items-center justify-center mx-auto;
+  background: conic-gradient(from 0deg, #4F46E5 var(--progress), #E5E7EB var(--progress), #E5E7EB 100%);
+}
+
+.radial-progress::before {
+  content: '';
+  @apply absolute w-20 h-20 bg-white rounded-full;
+}
+
+.step-content {
+  @apply relative z-10 flex flex-col items-center justify-center;
+}
+
+.current-step {
+  @apply text-2xl font-bold text-indigo-600;
+}
+
+.total-steps {
+  @apply text-sm text-gray-500;
+}
+
+.step-label {
+  @apply mt-4 text-center text-sm font-medium text-gray-900;
+}
+
+/* Step Pills */
+.step-pills {
+  @apply flex justify-center mt-6 gap-2;
+}
+
+.step-pill {
+  @apply h-1.5 rounded-full transition-all duration-300;
+}
+
+.step-pill.active {
+  @apply w-8 bg-indigo-600;
+}
+
+.step-pill.completed {
+  @apply w-2 bg-indigo-400;
+}
+
+.step-pill.upcoming {
+  @apply w-2 bg-gray-200;
+}
+
+/* Next Step Preview */
+.next-step-preview {
+  @apply mt-6 p-4 rounded-lg bg-gray-50 border border-gray-200;
+  @apply transform transition-all duration-300;
+}
+
+.next-step-label {
+  @apply text-xs text-gray-500 mb-1;
+}
+
+.next-step-title {
+  @apply text-sm font-medium text-gray-900;
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 768px) {
+  .radial-progress {
+    @apply w-32 h-32;
+  }
+  
+  .radial-progress::before {
+    @apply w-28 h-28;
+  }
+  
+  .current-step {
+    @apply text-3xl;
+  }
+}
+
+/* Enhanced Mobile/Tablet Responsive Styles for Tabs */
+@media (max-width: 1024px) {
+  /* Main Tab Container */
+  .main-tabs-container {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 8px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* Main Tab Buttons */
+  .tab-button {
+    position: relative;
+    padding-left: 48px !important;
+    border-left: 4px solid transparent;
+  }
+
+  .tab-button.active {
+    border-left-color: #4f46e5;
+  }
+
+  .tab-button svg {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* Sub Tabs Container */
+  .vertical-subtabs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: var(--color-background);
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  /* Sub Tab Buttons */
+  .subtab-button {
+    position: relative;
+    padding-left: 24px;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+  }
+
+  .subtab-button::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+  }
+
+  .subtab-button.active {
+    opacity: 1;
+    padding-left: 32px;
+  }
+
+  .subtab-button.active::before {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+    background: #4f46e5;
+  }
+}
+
+/* Dark mode specific styles */
+.dark .main-tabs-container {
+  background: rgba(17, 24, 39, 0.8);
+}
+
+.dark .vertical-subtabs {
+  background: rgba(31, 41, 55, 0.6);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 

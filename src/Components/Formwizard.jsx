@@ -150,54 +150,117 @@ export default function FormWizardSample() {
       return sum + (item.selected ? Number(item.cost) || 0 : 0)
     }, 0);
   };
-  const StepperProgress = () => (
-    <div className="relative mb-8">
-      <div className="w-full h-1 bg-gray-200 rounded-full">
-        <motion.div
-          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: `${(activeStep / (steps.length - 1)) * 100}%` }}
-          transition={{ duration: 0.3 }}
-        />
-      </div>
-      <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between">
-        {steps.map((step, idx) => (
-          <motion.button
-            key={idx}
-            onClick={() => setActiveStep(idx)}
-            className={`w-8 h-8 rounded-full flex items-center justify-center
-              ${idx <= activeStep ? 'bg-indigo-500' : 'bg-gray-200'} 
-              transition-colors duration-300`}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {idx < activeStep ? (
-              <IoCheckmarkCircle className="w-6 h-6 text-white" />
-            ) : (
-              <span className={`text-sm ${idx <= activeStep ? 'text-white' : 'text-gray-600'}`}>
-                {idx + 1}
-              </span>
+  const StepperProgress = () => {
+    // Calculate the progress percentage for the radial progress
+    const progressPercentage = (activeStep / (steps.length - 1)) * 100;
+    
+    return (
+      <div className="relative mb-8">
+        {/* Desktop Stepper */}
+        <div className="hidden md:block">
+          <div className="w-full h-1 bg-gray-200 rounded-full">
+            <motion.div
+              className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${(activeStep / (steps.length - 1)) * 100}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+          <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between">
+            {steps.map((step, idx) => (
+              <motion.button
+                key={idx}
+                onClick={() => setActiveStep(idx)}
+                className={`w-8 h-8 rounded-full flex items-center justify-center
+                  ${idx <= activeStep ? 'bg-indigo-500' : 'bg-gray-200'} 
+                  transition-colors duration-300`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {idx < activeStep ? (
+                  <IoCheckmarkCircle className="w-6 h-6 text-white" />
+                ) : (
+                  <span className={`text-sm ${idx <= activeStep ? 'text-white' : 'text-gray-600'}`}>
+                    {idx + 1}
+                  </span>
+                )}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile/Tablet Radial Stepper */}
+        <div className="md:hidden">
+          <div className="radial-stepper">
+            {/* Radial Progress */}
+            <div 
+              className="radial-progress"
+              style={{ '--progress': `${progressPercentage}%` }}
+            >
+              <div className="step-content">
+                <span className="current-step">{activeStep + 1}</span>
+                <span className="total-steps">of {steps.length}</span>
+              </div>
+            </div>
+
+            {/* Step Label */}
+            <div className="step-label">{steps[activeStep]}</div>
+
+            {/* Step Pills */}
+            <div className="step-pills">
+              {steps.map((_, idx) => (
+                <motion.div
+                  key={idx}
+                  className={`step-pill ${
+                    idx === activeStep
+                      ? 'active'
+                      : idx < activeStep
+                      ? 'completed'
+                      : 'upcoming'
+                  }`}
+                  initial={false}
+                  animate={{
+                    scale: idx === activeStep ? 1.1 : 1,
+                  }}
+                  transition={{ duration: 0.2 }}
+                />
+              ))}
+            </div>
+
+            {/* Next Step Preview */}
+            {activeStep < steps.length - 1 && (
+              <motion.div 
+                className="next-step-preview"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <span className="next-step-label">Next</span>
+                <div className="next-step-title">{steps[activeStep + 1]}</div>
+              </motion.div>
             )}
-          </motion.button>
-        ))}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
         return (
-          <div className="flex gap-4 p-6 bg-gray-50 rounded-lg">
-              <div className="flex-shrink-0">
-                <span className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-semibold">
-                  1
-                </span>
-              </div>
-              <div className="flex-grow">
+          <div className="form-section">
+            <div className="flex-shrink-0">
+              <span className="step-number">
+                1
+              </span>
+            </div>
+            <div className="flex-grow">
+              <div className="form-section-header">
                 <h3 className="text-xl font-semibold mb-1">Personal Information</h3>
                 <p className="text-gray-600 mb-4">Key information about the business promoter.</p>
-
+              </div>
+              <div className="input-group">
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Owner Name*</label>
                   <input
@@ -293,20 +356,23 @@ export default function FormWizardSample() {
                   </select>
                 </div>
               </div>
-            </div>  
+            </div>
+          </div>
         );
       
         case 1:
           return (
-            <div className="flex gap-4 p-6 bg-gray-50 rounded-lg">
+            <div className="form-section">
               <div className="flex-shrink-0">
-                <span className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-semibold">
+                <span className="step-number">
                   2
                 </span>
               </div>
               <div className="flex-grow">
-                <h3 className="text-xl font-semibold mb-1">Business Information</h3>
-                <p className="text-gray-600 mb-4">Overview of the business details.</p>
+                <div className="form-section-header">
+                  <h3 className="text-xl font-semibold mb-1">Business Information</h3>
+                  <p className="text-gray-600 mb-4">Overview of the business details.</p>
+                </div>
   
                 {/* Address */}
                 <div className="mb-6">
@@ -440,15 +506,17 @@ export default function FormWizardSample() {
           );
           case 2:
             return (
-              <div className="flex gap-4 p-6 bg-gray-50 rounded-lg">
+              <div className="form-section">
                 <div className="flex-shrink-0">
-                  <span className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-semibold">
+                  <span className="step-number">
                     1
                   </span>
                 </div>
                 <div className="flex-grow">
-                  <h3 className="text-xl font-semibold mb-1">Name of your business entity?</h3>
-                  <p className="text-gray-600 mb-4">Type the whole legal name.</p>
+                  <div className="form-section-header">
+                    <h3 className="text-xl font-semibold mb-1">Name of your business entity?</h3>
+                    <p className="text-gray-600 mb-4">Type the whole legal name.</p>
+                  </div>
                   <input
                     type="text"
                     name="fullName"
@@ -465,15 +533,17 @@ export default function FormWizardSample() {
             );
             case 3:
               return (
-                <div className="flex gap-4 p-6 bg-gray-50 rounded-lg">
+                <div className="form-section">
                   <div className="flex-shrink-0">
-                    <span className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-semibold">
+                    <span className="step-number">
                       2
                     </span>
                   </div>
                   <div className="flex-grow">
-                    <h3 className="text-xl font-semibold mb-1">"What category does your business fall under?</h3>
-                    <p className="text-gray-600 mb-4">E.g., Soap Manufacturing, Pickles manufacturing, Diary Farm etc.</p>
+                    <div className="form-section-header">
+                      <h3 className="text-xl font-semibold mb-1">"What category does your business fall under?</h3>
+                      <p className="text-gray-600 mb-4">E.g., Soap Manufacturing, Pickles manufacturing, Diary Farm etc.</p>
+                    </div>
                     <input
                       type="text"
                       name="businessType"
@@ -490,16 +560,18 @@ export default function FormWizardSample() {
               );
               case 4:
                 return (
-                  <div className="flex gap-4 p-6 bg-gray-50 rounded-lg">
+                  <div className="form-section">
                     <div className="flex-shrink-0">
-                      <span className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-semibold">
+                      <span className="step-number">
                         3
                       </span>
                     </div>
                     <div className="flex-grow">
-                      <h3 className="text-xl font-semibold mb-1">Please select your industry</h3>
-                      <p className="text-gray-600 mb-4">Click the most applicable one to pick.</p>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="form-section-header">
+                        <h3 className="text-xl font-semibold mb-1">Please select your industry</h3>
+                        <p className="text-gray-600 mb-4">Click the most applicable one to pick.</p>
+                      </div>
+                      <div className="responsive-grid">
                         {[
                           { id: 'manufacturing', icon: '/manufacturing.svg', label: 'Manufacturing' },
                           { id: 'trading', icon: '/trading.svg', label: 'Trading' },
@@ -934,17 +1006,22 @@ export default function FormWizardSample() {
 
   return (
     <Layout>
-      <div className="max-w-5xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-lg">
+      <div className="max-w-1xl mx-auto">
+        <div className="bg-white">
           <div className="text-center p-6 border-b border-gray-200">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Create a Project Report</h1>
             <p className="text-gray-600">Complete all 10 steps to submit your application</p>
           </div>
 
-          <div className="p-6">
-            {/* Progress Stepper */}
-            <StepperProgress />
+          {/* Sticky Stepper Container */}
+          <div className="sticky top-0 z-50 bg-white shadow-md">
+            <div className="p-6">
+              <StepperProgress />
+            </div>
+          </div>
 
+          {/* Content Container with padding */}
+          <div className="p-6">
             {/* Step Content */}
             <AnimatePresence mode="wait">
               <motion.div

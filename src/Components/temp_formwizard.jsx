@@ -829,7 +829,7 @@ export default function FormWizardSample() {
       case 2:
         return (
           // Your existing Review & Submit content
-          <div className="flex flex-col gap-6 max-w-4xl mx-auto">
+          <div className="flex flex-col gap-6 mx-auto">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Application Summary</h2>
               <p className="text-gray-600">Review your application details before submission</p>

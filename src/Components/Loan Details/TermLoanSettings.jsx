@@ -69,7 +69,7 @@ const TermLoanSettings = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="w-full max-w-4xl mx-auto"
+      className="w-full mx-auto"
     >
       <div className="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-lg p-6 mb-6 text-white">
         <h3 className="text-2xl font-bold">Term Loan Calculator</h3>

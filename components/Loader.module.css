@@ -18,6 +18,11 @@
     align-items: center;
     background: rgba(255, 255, 255, 0.9);
     z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: transparent;
 }
 
 .wrapper {
@@ -29,6 +34,10 @@
     align-items: center;
     background-color: transparent;
     border: none;
+    width: 200px;
+    height: 60px;
+    position: relative;
+    z-index: 1;
 }
 
 .boxWrap {
@@ -36,6 +45,15 @@
     height: 70%;
     position: relative;
     transform: rotate(-45deg);
+    width: 70%;
+    height: 35px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .box {
@@ -49,42 +67,64 @@
     background-position: 0% 50%;
     background-size: 1000% 1000%;
     visibility: hidden;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    border-radius: 2px;
+    background: #4f46e5;
+    animation: animate 0.8s ease-in-out infinite;
+}
+
+.darkMode .box {
+    background: #4f46e5 !important;
 }
 
 .one {
     animation:
         moveGradient 15s infinite,
         oneMove 3.5s infinite;
+    left: 0;
+    animation-delay: 0.1s;
 }
 
 .two {
     animation:
         moveGradient 15s infinite,
         twoMove 3.5s .15s infinite;
+    left: 20px;
+    animation-delay: 0.2s;
 }
 
 .three {
     animation:
         moveGradient 15s infinite,
         threeMove 3.5s .3s infinite;
+    left: 40px;
+    animation-delay: 0.3s;
 }
 
 .four {
     animation:
         moveGradient 15s infinite,
         fourMove 3.5s .575s infinite;
+    left: 60px;
+    animation-delay: 0.4s;
 }
 
 .five {
     animation:
         moveGradient 15s infinite,
         fiveMove 3.5s .725s infinite;
+    left: 80px;
+    animation-delay: 0.5s;
 }
 
 .six {
     animation:
         moveGradient 15s infinite,
         sixMove 3.5s .875s infinite;
+    left: 100px;
+    animation-delay: 0.6s;
 }
 
 @keyframes moveGradient {
@@ -355,5 +395,17 @@
     100% {
         clip-path: inset(70% 35% 0% 35% round 5%);
         animation-timing-function: cubic-bezier(0.86, 0, 0.07, 1);
+    }
+}
+
+@keyframes animate {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
     }
 }

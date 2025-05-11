@@ -251,7 +251,7 @@ const MonthlyExpense = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="w-full max-w-5xl mx-auto"
+      className="w-full max-w-1xl mx-auto"
     >
       <div className="bg-white rounded-lg shadow-sm">
         <div className="p-4 border-b border-gray-200">
