@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineUserCircle, HiMenuAlt3, HiX } from "react-icons/hi";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function Layout({ children }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

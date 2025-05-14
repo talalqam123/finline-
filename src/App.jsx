@@ -7,9 +7,9 @@ import { AppProvider } from './context/AppContext';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Import components
-import Dashboard from "./Components/Dashboardcontent";
-import FormWizardSample from "./Components/Formwizard";
-import UserDetails from "./Components/UserDetails";
+import Dashboard from "./Components/Layout & Dashboard/Dashboardcontent";
+import FormWizardSample from "./Components/Layout & Dashboard/Formwizard";
+import UserDetails from "./Components/Layout & Dashboard/UserDetails";
 import Loader from '../components/Loader';
 
 // Import new components

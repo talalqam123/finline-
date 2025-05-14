@@ -4,11 +4,11 @@ import { useNavigate, useParams, useLocation, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaUser, FaFileAlt, FaCog } from 'react-icons/fa';
 import Layout from './Layout';
-import CompanyDetails from './Company Details/BasicDetails';
-import OwnerInformation from './Company Details/OwnerInformation';
-import MonthlyExpense from './Income Details/MonthlyExpense';
+import CompanyDetails from '../Company Details/BasicDetails';
+import OwnerInformation from '../Company Details/OwnerInformation';
+import MonthlyExpense from '../Income Details/MonthlyExpense';
 import { toast } from 'react-toastify';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const TabContainer = styled.div`
   width: 100%;

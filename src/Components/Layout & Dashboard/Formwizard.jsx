@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IoCheckmarkCircle } from "react-icons/io5";
 import Layout from './Layout';
 import { toast } from 'react-toastify';
-import api from '../services/api';  // Add this import
+import api from '../../services/api';  // Add this import
 
 const steps = [
   'Step 1: Business Details',

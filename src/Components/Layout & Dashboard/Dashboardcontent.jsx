@@ -4,10 +4,10 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Layout from './Layout';
-import api from '../services/api';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 import { Skeleton } from "@/Components/ui/skeleton";
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const TableSkeleton = () => {
   const { darkMode } = useTheme();
