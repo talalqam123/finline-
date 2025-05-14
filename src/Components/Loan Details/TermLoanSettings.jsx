@@ -71,21 +71,21 @@ const TermLoanSettings = () => {
       exit={{ opacity: 0, y: -20 }}
       className="w-full mx-auto"
     >
-      <div className="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-lg p-6 mb-6 text-white">
+      <div className="bg-gradient-to-r from-indigo-600 to-blue-500 dark:from-indigo-700 dark:to-blue-600 rounded-lg p-6 mb-6 text-white">
         <h3 className="text-2xl font-bold">Term Loan Calculator</h3>
-        <p className="text-indigo-100">Calculate your loan details and EMI</p>
+        <p className="text-indigo-100 dark:text-indigo-200">Calculate your loan details and EMI</p>
       </div>
 
       {/* Tab Container with new design */}
-      <div className="bg-white rounded-lg shadow-lg mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg mb-6">
         <div className="flex p-2">
           <motion.button 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={`flex-1 p-4 rounded-lg ${
               activeTab === 'details' 
-                ? 'bg-indigo-50 text-indigo-600' 
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400' 
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
             onClick={() => setActiveTab('details')}
           >
@@ -100,8 +100,8 @@ const TermLoanSettings = () => {
             whileTap={{ scale: 0.98 }}
             className={`flex-1 p-4 rounded-lg ${
               activeTab === 'emi' 
-                ? 'bg-indigo-50 text-indigo-600' 
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400' 
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
             onClick={() => setActiveTab('emi')}
           >
@@ -124,25 +124,25 @@ const TermLoanSettings = () => {
             className="space-y-6"
           >
             {/* Investment Card */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-indigo-100 rounded-full">
-                    <FaChartPie className="text-2xl text-indigo-600" />
+                  <div className="p-3 bg-indigo-100 dark:bg-indigo-900/50 rounded-full">
+                    <FaChartPie className="text-2xl text-indigo-600 dark:text-indigo-400" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-800">Net Investment</h4>
-                    <p className="text-gray-500">Total project value</p>
+                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Net Investment</h4>
+                    <p className="text-gray-500 dark:text-gray-400">Total project value</p>
                   </div>
                 </div>
-                <div className="text-2xl font-bold text-indigo-600">₹{netInvestment.toFixed(2)}</div>
+                <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">₹{netInvestment.toFixed(2)}</div>
               </div>
 
               {/* Contribution Slider */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <label className="text-gray-700 font-medium">Contribution Percentage</label>
-                  <span className="text-indigo-600 font-bold">{assets.ownContributionPercent}%</span>
+                  <label className="text-gray-700 dark:text-gray-300 font-medium">Contribution Percentage</label>
+                  <span className="text-indigo-600 dark:text-indigo-400 font-bold">{assets.ownContributionPercent}%</span>
                 </div>
                 <input
                   type="range"
@@ -150,33 +150,33 @@ const TermLoanSettings = () => {
                   max="100"
                   value={assets.ownContributionPercent}
                   onChange={(e) => handleTermLoanUpdate({ ownContributionPercent: e.target.value })}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                  className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-indigo-600 dark:accent-indigo-400"
                 />
 
                 <div className="grid grid-cols-2 gap-6 mt-6">
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                     <div className="flex items-center gap-3 mb-2">
-                      <FaMoneyBillWave className="text-green-600" />
-                      <label className="text-gray-700 font-medium">Own Contribution</label>
+                      <FaMoneyBillWave className="text-green-600 dark:text-green-400" />
+                      <label className="text-gray-700 dark:text-gray-300 font-medium">Own Contribution</label>
                     </div>
                     <input
                       type="number"
                       value={ownContribution}
                       onChange={(e) => handleTermLoanUpdate({ ownContribution: e.target.value })}
-                      className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="w-full p-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent"
                     />
                   </div>
 
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                     <div className="flex items-center gap-3 mb-2">
-                      <FaPercentage className="text-indigo-600" />
-                      <label className="text-gray-700 font-medium">Term Loan Amount</label>
+                      <FaPercentage className="text-indigo-600 dark:text-indigo-400" />
+                      <label className="text-gray-700 dark:text-gray-300 font-medium">Term Loan Amount</label>
                     </div>
                     <input
                       type="text"
                       value={termLoanAmount}
                       readOnly
-                      className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-700"
+                      className="w-full p-3 bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300"
                     />
                   </div>
                 </div>
@@ -188,14 +188,14 @@ const TermLoanSettings = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                className="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
               >
                 Cancel
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-lg"
+                className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-indigo-500 dark:from-indigo-700 dark:to-indigo-600 text-white rounded-lg"
               >
                 Save Changes
               </motion.button>
@@ -212,26 +212,26 @@ const TermLoanSettings = () => {
             className="space-y-6"
           >
             {/* Loan Amount Display */}
-            <div className="bg-white rounded-lg shadow-lg p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
-                  <span className="text-gray-700">Loan Amount:</span>
+                  <span className="text-gray-700 dark:text-gray-300">Loan Amount:</span>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    className="bg-indigo-600 dark:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
                   >
                     Edit <FaEdit />
                   </motion.button>
                 </div>
-                <span className="text-indigo-600 font-bold text-xl">₹{termLoanAmount}</span>
+                <span className="text-indigo-600 dark:text-indigo-400 font-bold text-xl">₹{termLoanAmount}</span>
               </div>
             </div>
 
             {/* Interest and Tenure */}
-            <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 space-y-4">
               <div className="space-y-2">
-                <label className="text-gray-700 font-medium">
+                <label className="text-gray-700 dark:text-gray-300 font-medium">
                   Interest on loan <span className="text-red-500">*</span>
                 </label>
                 <div className="flex">
@@ -239,20 +239,20 @@ const TermLoanSettings = () => {
                     type="number"
                     value={termLoan.interestRate}
                     onChange={(e) => handleTermLoanUpdate({ interestRate: e.target.value })}
-                    className="w-full p-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-l-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent"
                   />
-                  <span className="bg-gray-100 px-4 flex items-center border border-l-0 border-gray-300 rounded-r-lg">
+                  <span className="bg-gray-100 dark:bg-gray-700 px-4 flex items-center border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-lg text-gray-700 dark:text-gray-300">
                     %
                   </span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-gray-700 font-medium">Select Loan Tenure</label>
+                <label className="text-gray-700 dark:text-gray-300 font-medium">Select Loan Tenure</label>
                 <select
                   value={termLoan.tenure}
                   onChange={(e) => handleTermLoanUpdate({ tenure: e.target.value })}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent"
                 >
                   {[...Array(25)].map((_, i) => (
                     <option key={i + 1} value={i + 1}>{i + 1}</option>
@@ -261,11 +261,11 @@ const TermLoanSettings = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-gray-700 font-medium">Loan Starting Date</label>
+                <label className="text-gray-700 dark:text-gray-300 font-medium">Loan Starting Date</label>
                 <select
                   value={termLoan.startDate}
                   onChange={(e) => handleTermLoanUpdate({ startDate: e.target.value })}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent"
                 >
                   {generateStartDates().map(date => (
                     <option key={date.value} value={date.value}>{date.label}</option>
@@ -275,8 +275,8 @@ const TermLoanSettings = () => {
             </div>
 
             {/* Calculation Method */}
-            <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
-              <label className="text-gray-700 font-medium">Repayment calculation Method</label>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 space-y-4">
+              <label className="text-gray-700 dark:text-gray-300 font-medium">Repayment calculation Method</label>
               <div className="flex gap-4">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -284,8 +284,8 @@ const TermLoanSettings = () => {
                   onClick={() => handleTermLoanUpdate({ calculationType: 'p' })}
                   className={`px-6 py-2 rounded-lg border ${
                     termLoan.calculationType === 'p' 
-                      ? 'bg-indigo-50 border-indigo-600 text-indigo-600' 
-                      : 'border-gray-300 text-gray-700'
+                      ? 'bg-indigo-50 dark:bg-indigo-900/50 border-indigo-600 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400' 
+                      : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
                   }`}
                 >
                   Based on fixed principal
@@ -296,8 +296,8 @@ const TermLoanSettings = () => {
                   onClick={() => handleTermLoanUpdate({ calculationType: 'e' })}
                   className={`px-6 py-2 rounded-lg border ${
                     termLoan.calculationType === 'e'
-                      ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
-                      : 'border-gray-300 text-gray-700'
+                      ? 'bg-indigo-50 dark:bg-indigo-900/50 border-indigo-600 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400'
+                      : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
                   }`}
                 >
                   Based on fixed EMI
@@ -306,8 +306,8 @@ const TermLoanSettings = () => {
             </div>
 
             {/* EMI Calculation */}
-            <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
-              <label className="text-gray-700 font-medium">EMI calculation</label>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 space-y-4">
+              <label className="text-gray-700 dark:text-gray-300 font-medium">EMI calculation</label>
               <div className="flex gap-4">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -315,8 +315,8 @@ const TermLoanSettings = () => {
                   onClick={() => handleTermLoanUpdate({ emiCalculation: '1' })}
                   className={`px-6 py-2 rounded-lg border ${
                     termLoan.emiCalculation === '1'
-                      ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
-                      : 'border-gray-300 text-gray-700'
+                      ? 'bg-indigo-50 dark:bg-indigo-900/50 border-indigo-600 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400'
+                      : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
                   }`}
                 >
                   Calculate EMI automatically
@@ -327,8 +327,8 @@ const TermLoanSettings = () => {
                   onClick={() => handleTermLoanUpdate({ emiCalculation: '0' })}
                   className={`px-6 py-2 rounded-lg border ${
                     termLoan.emiCalculation === '0'
-                      ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
-                      : 'border-gray-300 text-gray-700'
+                      ? 'bg-indigo-50 dark:bg-indigo-900/50 border-indigo-600 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400'
+                      : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
                   }`}
                 >
                   Enter monthly installment
@@ -340,18 +340,18 @@ const TermLoanSettings = () => {
                 value={termLoan.monthlyInstallment}
                 onChange={(e) => handleTermLoanUpdate({ monthlyInstallment: e.target.value })}
                 readOnly={termLoan.emiCalculation === '1'}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent"
                 placeholder="Monthly installment"
               />
 
               <div className="space-y-2">
-                <label className="text-gray-700 font-medium">
+                <label className="text-gray-700 dark:text-gray-300 font-medium">
                   Principle repayment moratorium months
                 </label>
                 <select
                   value={termLoan.moratoriumMonths}
                   onChange={(e) => handleTermLoanUpdate({ moratoriumMonths: e.target.value })}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent"
                 >
                   {[...Array(37)].map((_, i) => (
                     <option key={i} value={i}>{i}</option>
@@ -365,14 +365,14 @@ const TermLoanSettings = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 py-2 bg-orange-500 text-white rounded-lg min-w-[150px]"
+                className="px-6 py-2 bg-orange-500 dark:bg-orange-600 text-white rounded-lg min-w-[150px]"
               >
                 Cancel
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg min-w-[150px]"
+                className="px-6 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg min-w-[150px]"
               >
                 Save Changes
               </motion.button>

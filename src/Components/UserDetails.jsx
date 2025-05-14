@@ -33,7 +33,26 @@ const HorizontalTabs = styled.div`
   width: 100%;
   
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    display: flex;
+    overflow-x: auto;
+    grid-template-columns: none;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    & > button {
+      flex: 0 0 auto;
+      width: auto;
+      min-width: 160px;
+      margin-right: 8px;
+      
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 `;
 
@@ -89,6 +108,7 @@ const ContentContainer = styled.div`
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 16px;
+    gap: 16px;
   }
 `;
 
@@ -100,6 +120,17 @@ const VerticalSubTabs = styled.div`
   
   @media (max-width: 768px) {
     width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -141,6 +172,14 @@ const SubTabButton = styled.button`
       if (props.active) return '#ffffff';
       return props.darkMode ? '#6b7280' : '#94a3b8';
     }};
+  }
+
+  @media (max-width: 768px) {
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    margin-bottom: 0;
+    padding: 10px 16px;
   }
 `;
 

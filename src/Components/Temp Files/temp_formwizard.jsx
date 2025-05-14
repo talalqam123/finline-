@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoCheckmarkCircle } from "react-icons/io5";
-import Layout from './Layout';
-import api from '../services/api';
+import Layout from '../Layout';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 
 const steps = ['Business Information', 'Address & Expenses', 'Review & Submit'];

@@ -5,23 +5,22 @@ import { useApp } from '../../context/AppContext';
 
 const ExpenseEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
   return (
-    <div className="p-4 bg-white rounded-lg border border-gray-200 mb-4">
-      <div className="flex justify-between items-start mb-4">
-        <h5 className="text-xs font-medium text-gray-700">Expense Entry</h5>
+    <div className="p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-3 sm:mb-4">
+      <div className="flex justify-between items-start mb-3 sm:mb-4">
+        <h5 className="text-[11px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">Expense Entry</h5>
         {!isOnly && (
           <button
             onClick={onDelete}
-            className="text-red-500 hover:text-red-600 p-1"
+            className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 p-1"
           >
-            <FaTrash size={12} />
+            <FaTrash size={10} className="sm:w-3 sm:h-3" />
           </button>
         )}
       </div>
 
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="block mb-2 text-xs font-medium text-gray-700">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
+          <div>            <label className="block mb-1.5 sm:mb-2 text-[11px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">
               Item *
             </label>
             <input
@@ -29,11 +28,11 @@ const ExpenseEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
               value={entry.item}
               onChange={(e) => onChange({ ...entry, item: e.target.value })}
               placeholder="Enter item name"
-              className="w-full px-4 py-2 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
             />
           </div>
           <div>
-            <label className="block mb-2 text-xs font-medium text-gray-700">
+            <label className="block mb-1.5 sm:mb-2 text-[11px] sm:text-xs font-medium text-gray-700">
               Amount *
             </label>
             <input
@@ -41,7 +40,7 @@ const ExpenseEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
               value={entry.amount}
               onChange={(e) => onChange({ ...entry, amount: e.target.value })}
               placeholder="Enter amount"
-              className="w-full px-4 py-2 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
         </div>
@@ -84,29 +83,27 @@ const ExpenseItem = ({ title, defaultAmount = "0.00", expenses = [], onUpdateExp
     }
   };
 
-  return (
-    <div className="border-b border-gray-200">
+  return (    <div className="border-b border-gray-200 dark:border-gray-700">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full py-4 px-6 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+        className="w-full py-3 sm:py-4 px-4 sm:px-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
       >
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <FaChevronDown
-            className={`transform transition-transform duration-200 ${
+            className={`transform transition-transform duration-200 text-gray-500 dark:text-gray-400 ${
               isOpen ? 'rotate-180' : ''
-            }`}
-            size={12}
+            } w-2.5 h-2.5 sm:w-3 sm:h-3`}
           />
-          <span className="font-medium text-xs text-gray-700">{title}</span>
+          <span className="font-medium text-[11px] sm:text-xs text-gray-700 dark:text-gray-300">{title}</span>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-xs text-gray-600">Total:</span>
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <span className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">Total:</span>
           <input
             type="number"
             value={total}
             onChange={handleTotalChange}
             onClick={(e) => e.stopPropagation()}
-            className="w-32 text-right px-3 py-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-20 sm:w-32 text-right px-2 sm:px-3 py-1 text-[11px] sm:text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
           />
         </div>
       </button>
@@ -117,10 +114,9 @@ const ExpenseItem = ({ title, defaultAmount = "0.00", expenses = [], onUpdateExp
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden bg-gray-50"
+            transition={{ duration: 0.2 }}            className="overflow-hidden bg-gray-50 dark:bg-gray-800"
           >
-            <div className="p-6 space-y-4">
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
               {expenses.map((entry) => (
                 <ExpenseEntryForm
                   key={entry.id}
@@ -133,9 +129,9 @@ const ExpenseItem = ({ title, defaultAmount = "0.00", expenses = [], onUpdateExp
               
               <button
                 onClick={addEntry}
-                className="flex items-center space-x-2 text-indigo-600 hover:text-indigo-700 text-xs font-medium"
+                className="flex items-center space-x-1 sm:space-x-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-[11px] sm:text-xs font-medium"
               >
-                <FaPlus size={12} />
+                <FaPlus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 <span>Add Another {title}</span>
               </button>
             </div>
@@ -207,12 +203,11 @@ const TermLoan = () => {
     updateAssetData({ [field]: newValue });
     setEditingField(null);
   };
-
   const CircularProgress = ({ percentage }) => (
-    <div className="relative w-32 h-32">
+    <div className="relative w-24 h-24 sm:w-32 sm:h-32">
       <svg className="w-full h-full" viewBox="0 0 100 100">
         <circle
-          className="text-gray-200"
+          className="text-gray-200 dark:text-gray-700"
           strokeWidth="10"
           stroke="currentColor"
           fill="transparent"
@@ -221,7 +216,7 @@ const TermLoan = () => {
           cy="50"
         />
         <circle
-          className="text-indigo-500"
+          className="text-indigo-500 dark:text-indigo-400"
           strokeWidth="10"
           strokeLinecap="round"
           stroke="currentColor"
@@ -238,7 +233,7 @@ const TermLoan = () => {
         />
       </svg>
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <span className="text-2xl font-bold">{percentage}%</span>
+        <span className="text-xl sm:text-2xl font-bold">{percentage}%</span>
       </div>
     </div>
   );
@@ -247,27 +242,26 @@ const TermLoan = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full"
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      className="w-full px-4 sm:px-0"
+    >      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
         {/* Left Column - Summary */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="text-sm font-semibold text-gray-800 mb-6">Asset Allocation</h3>
-          <div className="flex justify-center mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6">
+          <h3 className="text-xs sm:text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4 sm:mb-6">Asset Allocation</h3>
+          <div className="flex justify-center mb-6 sm:mb-8">
             <CircularProgress percentage={
               ((values.ownContribution) / assets.totalAsset * 100).toFixed(0)
             } />
           </div>
-          <div className="space-y-4">
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-600">Own Contribution</span>
-              <span className="font-medium text-indigo-600">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex justify-between text-[11px] sm:text-xs">
+              <span className="text-gray-600 dark:text-gray-400">Own Contribution</span>
+              <span className="font-medium text-indigo-600 dark:text-indigo-400">
                 {((values.ownContribution) / assets.totalAsset * 100).toFixed(0)}%
               </span>
             </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-600">Term Loan</span>
-              <span className="font-medium text-indigo-600">
+            <div className="flex justify-between text-[11px] sm:text-xs">
+              <span className="text-gray-600 dark:text-gray-400">Term Loan</span>
+              <span className="font-medium text-indigo-600 dark:text-indigo-400">
                 {((values.termLoan) / assets.totalAsset * 100).toFixed(0)}%
               </span>
             </div>
@@ -275,9 +269,8 @@ const TermLoan = () => {
         </div>
 
         {/* Right Column - Details */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {[
-
             { label: 'Total Asset', value: assets.totalAsset, field: 'totalAsset' },
             { label: 'Subsidy', value: assets.subsidy, field: 'subsidy' },
             { label: 'Net Asset', value: values.netAsset, readOnly: true },
@@ -288,37 +281,35 @@ const TermLoan = () => {
               suffix: `@ ${assets.ownContributionPercent}%`
             },
             { label: 'Term Loan', value: values.termLoan, readOnly: true }
-          ].map((item) => (
-            <motion.div
+          ].map((item) => (            <motion.div
               key={item.label}
               whileHover={{ scale: 1.02 }}
-              className="bg-white rounded-lg shadow-sm p-4"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-3 sm:p-4"
             >
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-700">{item.label}</span>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <span className="text-[11px] sm:text-xs text-gray-700 dark:text-gray-300">{item.label}</span>
                   {item.suffix && (
-                    <span className="text-xs text-gray-500">{item.suffix}</span>
+                    <span className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">{item.suffix}</span>
                   )}
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   {editingField === item.field ? (
                     <input
                       type="number"
                       defaultValue={item.value}
                       onBlur={(e) => handleValueUpdate(item.field, e.target.value)}
-                      className="w-24 p-1 text-xs border rounded-md text-right"
+                      className="w-20 sm:w-24 p-1 text-[11px] sm:text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-right focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
                       autoFocus
-                    />
-                  ) : (
-                    <span className="text-xs font-semibold">₹ {parseFloat(item.value).toFixed(2)}</span>
+                    />                  ) : (
+                    <span className="text-[11px] sm:text-xs font-semibold dark:text-gray-300">₹ {parseFloat(item.value).toFixed(2)}</span>
                   )}
                   {!item.readOnly && (
                     <button
                       onClick={() => setEditingField(item.field)}
-                      className="text-indigo-600 hover:text-indigo-700 p-1 rounded-full hover:bg-indigo-50"
+                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 p-1 rounded-full hover:bg-indigo-50 dark:hover:bg-indigo-900/50"
                     >
-                      <FaEdit size={12} />
+                      <FaEdit className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                     </button>
                   )}
                 </div>
@@ -326,20 +317,19 @@ const TermLoan = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-      <div className="bg-white rounded-xl shadow-sm">
-        <div className="p-6 border-b border-gray-200">
+      </div>      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center">
-            <h3 className="text-sm font-semibold text-gray-800">
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-800 dark:text-gray-200">
               Total Expenses
             </h3>
-            <div className="text-base font-bold text-indigo-600">
+            <div className="text-sm sm:text-base font-bold text-indigo-600 dark:text-indigo-400">
               ₹{calculateTotalExpenses().toFixed(2)}
             </div>
           </div>
         </div>
 
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
           <ExpenseItem 
             title="Land and Building" 
             expenses={expenseCategories.landAndBuilding}

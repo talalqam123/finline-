@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Button } from "../../../ui/button";
-import { Printer, FileText } from "lucide-react";
-import { useBusinessReport } from '../../../context/BusinessReportContext';
+import { Button } from "../ui/button";
+import { Printer, Download, FileText } from "lucide-react";
+import { useBusinessReport } from '../../context/BusinessReportContext';
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
 
@@ -23,6 +23,7 @@ const CHART_COLORS = {
 
 function Home() {
   const reportRef = useRef(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { state, calculateFinancials, calculateProjectCosts, calculateWorkingCapital, formatMoney, formatTitle } = useBusinessReport();
 
   // Add print styles
@@ -49,6 +50,7 @@ function Home() {
         .no-print, 
         button, 
         .print-button,
+        .download-button,
         nav,
         header,
         .settings-panel,
@@ -127,8 +129,53 @@ function Home() {
     };
   }, [state.pdfSettings?.pageSpacing]);
 
+  // Generate PDF function
+  const generatePDF = async () => {
+    if (!reportRef.current) return;
+    
+    setIsGenerating(true);
+    
+    try {
+      const reportElement = reportRef.current;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      const canvas = await html2canvas(reportElement, {
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const imgHeight = canvas.height * pdfWidth / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      let pageCount = 1;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
+      
+      while (heightLeft > 0) {
+        position = -pdfHeight * pageCount;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+        pageCount++;
+      }
+      
+      pdf.save(`${state.project.name.replace(/\s+/g, '_')}_business_report.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
-    <div className="mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-6">
       {/* Top Navigation Bar */}
       <div className="bg-white rounded-lg shadow-sm mb-6 p-4 flex justify-between items-center no-print">
         <div className="flex items-center">
@@ -137,6 +184,25 @@ function Home() {
         </div>
         
         <div className="flex gap-3">
+          <Button 
+            onClick={generatePDF}
+            disabled={isGenerating}
+            variant="outline"
+            className="flex items-center gap-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50"
+          >
+            {isGenerating ? (
+              <>
+                <div className="animate-spin w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full mr-1"></div>
+                Generating...
+              </>
+            ) : (
+              <>
+                <Download className="h-4 w-4" />
+                Download PDF
+              </>
+            )}
+          </Button>
+          
           <Button 
             onClick={() => window.print()}
             variant="default"

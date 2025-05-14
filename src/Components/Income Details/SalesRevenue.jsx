@@ -5,7 +5,7 @@ import { useApp } from '../../context/AppContext';
 
 const RevenueEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
   return (
-    <div className="p-4 bg-white rounded-lg border border-gray-200 mb-4">
+    <div className="p-2 sm:p-4 bg-white rounded-lg border border-gray-200 mb-4">
       <div className="flex justify-between items-start mb-3">
         <h5 className="text-xs font-medium text-gray-700">Revenue Entry</h5>
         {!isOnly && (
@@ -19,7 +19,7 @@ const RevenueEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
       </div>
 
       <div className="space-y-4">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           <div>
             <label className="block mb-1.5 text-xs font-medium text-gray-700">
               Item/Service *
@@ -29,7 +29,7 @@ const RevenueEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
               value={entry.item}
               onChange={(e) => onChange({ ...entry, item: e.target.value })}
               placeholder="Enter service name"
-              className="w-full px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-2 sm:px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -41,7 +41,7 @@ const RevenueEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
               value={entry.rate}
               onChange={(e) => onChange({ ...entry, rate: e.target.value })}
               placeholder="Enter rate"
-              className="w-full px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-2 sm:px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -53,7 +53,7 @@ const RevenueEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
               value={entry.quantity}
               onChange={(e) => onChange({ ...entry, quantity: e.target.value })}
               placeholder="Monthly units"
-              className="w-full px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-2 sm:px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
         </div>
@@ -62,7 +62,7 @@ const RevenueEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
           <h4 className="text-xs font-medium text-gray-700 mb-4">
             % of growth in yearly sales
           </h4>
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4">
             {[1, 2, 3, 4, 5].map((year) => (
               <div key={year}>
                 <label className="block mb-2 text-xs text-gray-600">
@@ -78,7 +78,7 @@ const RevenueEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
                       [`year${year}`]: e.target.value
                     }
                   })}
-                  className="w-full px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-center"
+                  className="w-full px-2 sm:px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-center"
                 />
               </div>
             ))}
@@ -163,10 +163,10 @@ const SalesRevenue = () => {
       exit={{ opacity: 0, y: -20 }}
       className="w-full max-w-1xl mx-auto"
     >
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div className="bg-white rounded-lg shadow-sm">
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex justify-between items-center">
+          <div className="p-3 sm:p-4 border-b border-gray-200">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
               <h3 className="text-sm font-medium text-gray-800">
                 Monthly Revenue Entries
               </h3>
@@ -176,7 +176,7 @@ const SalesRevenue = () => {
             </div>
           </div>
 
-          <div className="p-6 space-y-4">
+          <div className="p-3 sm:p-6 space-y-4">
             {salesRevenue.entries?.map((entry) => (
               <RevenueEntryForm
                 key={entry.id}
@@ -189,7 +189,7 @@ const SalesRevenue = () => {
             
             <button
               onClick={addEntry}
-              className="flex items-center space-x-2 text-indigo-600 hover:text-indigo-700 text-xs font-medium"
+              className="flex items-center space-x-2 text-indigo-600 hover:text-indigo-700 text-xs font-medium w-full sm:w-auto justify-center sm:justify-start p-2 sm:p-0"
             >
               <FaPlus size={12} />
               <span>Add Another Revenue Entry</span>

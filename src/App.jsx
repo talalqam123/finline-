@@ -16,16 +16,16 @@ import Loader from '../components/Loader';
 import CompanyDetails from "./Components/Company Details/BasicDetails";
 import OwnerInformation from "./Components/Company Details/OwnerInformation";
 import MonthlyExpense from "./Components/Income Details/MonthlyExpense";
-import Assets from "./Components/Income Details/TermLoan";
+// import Assets from "./Components/Income Details/Term";
 import SalesRevenue from "./Components/Income Details/SalesRevenue";
-import TermLoan from "./Components/Income Details/TermLoan";
+import TermLoan from "./Components/Loan Details/TermLoan";
 import WorkingCapitalLoan from "./Components/Loan Details/WorkingCapitalLoan";
 import LoanSettings from "./Components/Loan Details/LoanSettings";
 import PDFReport from "./Components/Final/PDF/PDFReport";
 import PDFSettings from "./Components/Final/PDFSettings";
-import BusinessProfile from "./Components/Final/BusinessProfile";
-import Annexure from "./Components/Final/Annexure";
-import Home from './Components/Final/PDF/index';
+import BusinessProfile from "./Components/Company Details/BusinessProfile";
+import Annexure from "./Components/Company Details/Annexure";
+import Home from './Components/Final/PDF/PDFReport';
 import TermLoanSettings from './Components/Loan Details/TermLoanSettings';
 
 function App() {

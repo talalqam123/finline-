@@ -5,23 +5,23 @@ import { useApp } from '../../context/AppContext';
 
 const ExpenseEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
   return (
-    <div className="p-4 bg-white rounded-lg border border-gray-200 mb-4">
+    <div className="p-2 sm:p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-4">
       <div className="flex justify-between items-start mb-3">
-        <h5 className="text-xs font-medium text-gray-700">Expense Entry</h5>
+        <h5 className="text-[11px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">Expense Entry</h5>
         {!isOnly && (
           <button
             onClick={onDelete}
-            className="text-red-500 hover:text-red-600 p-1"
+            className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 p-1"
           >
             <FaTrash size={12} />
           </button>
         )}
       </div>
 
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-2 sm:space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
           <div>
-            <label className="block mb-1.5 text-xs font-medium text-gray-700">
+            <label className="block mb-1 sm:mb-1.5 text-[11px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">
               Item *
             </label>
             <input
@@ -29,11 +29,11 @@ const ExpenseEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
               value={entry.item}
               onChange={(e) => onChange({ ...entry, item: e.target.value })}
               placeholder="Enter item name"
-              className="w-full px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
             />
           </div>
           <div>
-            <label className="block mb-1.5 text-xs font-medium text-gray-700">
+            <label className="block mb-1 sm:mb-1.5 text-[11px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">
               Amount *
             </label>
             <input
@@ -41,7 +41,7 @@ const ExpenseEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
               value={entry.amount}
               onChange={(e) => onChange({ ...entry, amount: e.target.value })}
               placeholder="Enter amount"
-              className="w-full px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
             />
           </div>
         </div>
@@ -51,21 +51,21 @@ const ExpenseEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
             type="checkbox"
             checked={entry.isMonthly}
             onChange={(e) => onChange({ ...entry, isMonthly: e.target.checked })}
-            className="w-3 h-3 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+            className="w-3 h-3 text-indigo-600 dark:text-indigo-400 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 dark:focus:ring-indigo-400"
           />
-          <label className="text-xs text-gray-700">
+          <label className="text-[11px] sm:text-xs text-gray-700 dark:text-gray-300">
             Above expense happens every month
           </label>
         </div>
 
         <div>
-          <h4 className="text-xs font-medium text-gray-700 mb-4">
+          <h4 className="text-[11px] sm:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-4">
             % of increase in expense yearly
           </h4>
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4">
             {[1, 2, 3, 4, 5].map((year) => (
               <div key={year}>
-                <label className="block mb-2 text-xs text-gray-600">
+                <label className="block mb-1 sm:mb-2 text-[10px] sm:text-xs text-gray-600 dark:text-gray-400">
                   Year {year}
                 </label>
                 <input
@@ -78,7 +78,7 @@ const ExpenseEntryForm = ({ onDelete, isOnly = false, entry, onChange }) => {
                       [`year${year}`]: e.target.value
                     }
                   })}
-                  className="w-full px-3 py-1.5 text-xs text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-center"
+                  className="w-full px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 text-center"
                 />
               </div>
             ))}
@@ -118,36 +118,37 @@ const ExpenseItem = ({ title, defaultAmount = "0.00", category, entries = [], on
   };
 
   const removeEntry = (id) => {
-    if (entries.length > 1) {
-      onUpdateEntries(category, entries.filter(entry => entry.id !== id));
-    }
+    onUpdateEntries(
+      category,
+      entries.filter((entry) => entry.id !== id)
+    );
   };
 
   const updateEntry = (id, updatedEntry) => {
     onUpdateEntries(
       category,
-      entries.map(entry => entry.id === id ? updatedEntry : entry)
+      entries.map((entry) => (entry.id === id ? updatedEntry : entry))
     );
   };
 
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200 dark:border-gray-700">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full py-4 px-6 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+        className="w-full py-2 sm:py-4 px-3 sm:px-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
       >
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <FaChevronDown
-            className={`transform transition-transform duration-200 ${
+            className={`transform transition-transform duration-200 text-gray-500 dark:text-gray-400 ${
               isOpen ? 'rotate-180' : ''
             }`}
             size={12}
           />
-          <span className="font-medium text-xs text-gray-700">{title}</span>
+          <span className="font-medium text-[11px] sm:text-xs text-gray-700 dark:text-gray-300">{title}</span>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-xs text-gray-600">Total:</span>
-          <div className="w-32 text-right px-3 py-1 bg-gray-50 rounded-lg text-xs">
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <span className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">Total:</span>
+          <div className="w-24 sm:w-32 text-right px-2 sm:px-3 py-1 bg-gray-50 dark:bg-gray-700 rounded-lg text-[11px] sm:text-xs dark:text-gray-300">
             ₹{totalAmount}
           </div>
         </div>
@@ -160,9 +161,9 @@ const ExpenseItem = ({ title, defaultAmount = "0.00", category, entries = [], on
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden bg-gray-50"
+            className="overflow-hidden bg-gray-50 dark:bg-gray-800"
           >
-            <div className="p-6 space-y-4">
+            <div className="p-3 sm:p-6 space-y-2 sm:space-y-4">
               {entries.map((entry) => (
                 <ExpenseEntryForm
                   key={entry.id}
@@ -175,9 +176,9 @@ const ExpenseItem = ({ title, defaultAmount = "0.00", category, entries = [], on
               
               <button
                 onClick={addEntry}
-                className="flex items-center space-x-2 text-indigo-600 hover:text-indigo-700 font-medium"
+                className="flex items-center space-x-2 text-[11px] sm:text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium"
               >
-                <FaPlus size={14} />
+                <FaPlus size={12} />
                 <span>Add Another {title}</span>
               </button>
             </div>
@@ -251,21 +252,21 @@ const MonthlyExpense = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="w-full max-w-1xl mx-auto"
+      className="w-full max-w-7xl mx-auto px-2 sm:px-4"
     >
       <div className="bg-white rounded-lg shadow-sm">
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-3 sm:p-4 border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <h3 className="text-sm font-medium text-gray-800">
+            <h3 className="text-xs sm:text-sm font-medium text-gray-800">
               Total Expenses
             </h3>
-            <div className="text-base font-bold text-indigo-600">
+            <div className="text-sm sm:text-base font-bold text-indigo-600">
               ₹{calculateTotal().toFixed(2)}
             </div>
           </div>
         </div>
 
-        <div className="divide-y divide-gray-200 text-sm">
+        <div className="divide-y divide-gray-200 text-[11px] sm:text-sm">
           {expenseCategories.map(category => {
             const expense = monthlyExpenses.find(e => e.category === category.id);
             return (
